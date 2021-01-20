@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="content-language" content="ja">
+  <link rel="stylesheet" href="css/onsenui.min.css">
+  <link rel="stylesheet" href="css/onsen-css-components.min.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/custom.css">
+  <script src="js/onsenui.min.js"></script>
+  <script src="js/main.js"></script>
+</head>
+<body>
+
+<!-- 医院アプリのスプリッターメニュー-->
+<ons-splitter>
+  <ons-splitter-side id="menu" side="right" width="220px" collapse swipeable right>
+    <ons-page>
+      <ons-list>
+        <ons-list-item onclick="fn.load('home.html')" tappable>
+        TOP
+        </ons-list-item>
+        <ons-list-item onclick="fn.load('inspection.html')" tappable>
+        検品計測
+        </ons-list-item>
+        <ons-list-item onclick="fn.load('metal.html')" tappable>
+        メタル預け
+        </ons-list-item>
+        <ons-list-item onclick="" tappable>
+        エビデンスカレンダー
+        </ons-list-item>
+        <ons-list-item onclick="fn.load('settings.html')" tappable>
+        各種設定
+        </ons-list-item>
+        <ons-list-item onclick="" tappable>
+        利用規約
+        </ons-list-item>
+        <ons-list-item onclick="" tappable>
+        プライバシーポリシー
+        </ons-list-item>
+        <ons-list-item onclick="fn.load('login.html')" tappable>
+        ログアウト
+        </ons-list-item>
+      </ons-list>
+    </ons-page>
+  </ons-splitter-side>
+  <ons-splitter-content>
+    <ons-navigator id="eviNavigator" page="home.html"></ons-navigator>
+  </ons-splitter-content>
+</ons-splitter>
+<!-- 医院アプリのスプリッターメニューEND-->
+
+<!-- AI0010 ログイン画面-->
+<template id="login.html">
+  <ons-page>
+    <ons-row>
+        <ons-col class="login-form">
+            <div class="login-logo"><img src="img/evi-logo.png" alt="Evi計り"></div>
+            <div class="buttons-width">
+              <ons-row>
+              <ons-input id="email" placeholder="メールアドレス" type="email" class="login-input input-em"></ons-input>
+              </ons-row>
+              <ons-row>
+              <ons-input id="password" placeholder="パスワード" type="password" class="login-input input-pw"></ons-input>
+              </ons-row>
+              <ons-row>
+              <ons-button onclick="fn.load('home.html')" class="btn-login">ログイン</ons-button>
+              </ons-row>
+            </div>
+            <div class="mb-10"><a class="forgot-pw center" href="#">パスワードを忘れた場合はこちら</a></div>
+            <div class="mb-30"><a class="forgot-pw center" href="#">アカウント登録をしていない方はこちら</a></div>
+            <ons-row class="flex-center">
+              <ons-column>
+                <div class="mr-10"><a class="login-link center" href="#">利用規約</a></div>
+              </ons-column>
+              <ons-column>
+                <div class="ml-10"><a class="login-link center" href="#">プライバシーポリシー</a></div>
+              </ons-column>
+            </ons-row>
+        </ons-col>
+    </ons-row>
+  </ons-page>
+</template>
+<!-- AI0010 ログイン画面 END-->
+
+<!-- AI0100 ホーム画面-->
+<template id="home.html">
+  <ons-page>
+    <ons-toolbar>
+		<div class="left">
+			<div class="header_logo"><a onclick="fn.load('home.html')"><img src="img/evi-logo.png" width="80" alt="Evi計り"></a></div>
+		</div>
+		<div class="center">
+			<div class="header_pw_display"><div class="label">技工所に教える<br/>パスワード</div><div class="pw_cont">1357</div></div>
+		</div>
+      <div class="right">
+        <ons-toolbar-button onclick="fn.open()">
+          <div id="hamburger_menu">
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="cha">MENU</div>
+          </div>
+        </ons-toolbar-button>
+      </div>
+    </ons-toolbar>
+	  <div class="content">
+		  <div class="page_title"><h1>Evi計りトップページ</h1></div>
+		  <div class="page-content buttons-width">
+          <ons-button class="btn-top top-i" onclick="fn.load('inspection.html')">検品計測</ons-button>
+          <ons-button class="btn-top top-m" onclick="fn.load('metal.html')">メタル預け</ons-button>
+          <ons-button class="btn-top top-c" onclick="">エビデンスカレンダー</ons-button>
+          <ons-button class="btn-top top-s" onclick="fn.load('settings.html')">各種設定</ons-button>
+
+		  </div>
+      </div> 
+  </ons-page>
+</template>
+<!-- AI0100 ホーム画面 END-->
+
+<!-- AI0201 検品計測-->
+<template id="inspection.html">
+  <ons-page>
+    <ons-toolbar>
+		<div class="left">
+      <ons-back-button class="back-button"></ons-back-button>
+			<div class="header_logo"><a onclick="fn.load('home.html')"><img src="img/evi-logo.png" width="80" alt="Evi計り"></a></div>
+		</div>
+		<div class="center">
+			<div class="header_pw_display"><div class="label">技工所に教える<br/>パスワード</div><div class="pw_cont">1357</div></div>
+		</div>
+      <div class="right">
+        <ons-toolbar-button onclick="fn.open()">
+          <div id="hamburger_menu">
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="cha">MENU</div>
+          </div>
+        </ons-toolbar-button>
+      </div>
+    </ons-toolbar>
+	  <div class="content" id="inspection">
+		  <div class="page_title"><h1>検品計測</h1></div>
+		  <div class="page_content">
+		  <p class="mb10">納品書に記載の使用g数と技工物の実測値から割増率を自動で計算します。</p>
+		  <div class="measured_value active"><!-- 次に入力させるフォームパーツにactiveを当ててください -->
+      <div class="left-first" id="camera-icon">
+        <img src="img/icon-camera.svg" width="110">
+        <span>ここをタップして、技工物を計測しているところを指示書と一緒に撮影してください。</span>
+      </div>
+       <!--
+		<div class="left" id="after-measurement">
+        <img src="img/dummy_photo_nukiuchi.jpg">
+		</div>
+        -->
+			<div class="right">
+				<div>
+					<p class="label">実測値</p>
+					<p class="value">- g</p>
+				</div>
+			</div>
+		  </div>
+		  <div class="input_area">
+			<div class="row">
+  				<ons-select id="metal_name">
+					<option value="pd">Pd</option>
+					<option value="silver">シルバー</option>
+					<option value="gold">金合金</option>
+					<option value="nickel">ニッケル・クロム</option>
+					<option value="platinum">白金加金</option>
+					<option value="non-precious">ノンプレシャス</option>
+					<option value="semi-precious">セミプレシャス</option>
+  				</ons-select>
+			</div>
+      <div class="text-error mt-10 hidden">数字のみ、最大6桁＋2小数点</div>
+			<div class="row two_column two_colmun_01 mb-10">
+				  <ons-input id="" class="input_text longer" type="number" placeholder="納品書記載の使用g数を入力" step="0.01" min="0" max="9" oninput="javascript: if (this.value.length > 9) this.value = this.value.slice(0, 9);" float></ons-input>
+				  <ons-button onclick="" class="btn_01 gray">計算</ons-button><!-- 押せないボタンにはgrayを当ててください -->
+			</div>
+		  </div>
+		  <div class="result_area active">
+		  		<p><span class="exp">割増率は</span><span class="num">-</span><span class="unit">%</span>、<span class="exp">差分は</span><span class="num">-</span><span class="unit">g</span></p>
+		  </div>
+		  <div class="save_area">
+			<p class="">保存すると、カレンダーから計測データ一覧を確認できます。</p>
+			<div class="row two_column two_colmun_01">
+				<ons-select id="lab_name" class="longer">
+					<option value="">技工所を選択</option>
+					<option value="labid1">株式会社佐藤商事</option>
+					<option value="labid2">デンタルサプライ</option>
+					<option value="labid3">新宿デンタルラボ</option>
+					<option value="labid4">調布技工所</option>
+					<option value="labid5">株式会社ファストサプライ歯科技工所</option>
+				</ons-select>
+				<ons-button class="btn_01" onclick="showModalI()">保存</ons-button>
+			</div>
+		  </div>
+		  <div class="cancel_area center">
+		  	<a onclick="fn.load('home.html')" tappable>キャンセルしてホーム画面へ</a>
+		  </div>
+      </div>
+      </div>  
+  </ons-page>
+</template>
+<!-- AI0201 検品計測 END-->
+
+<!-- 検品計測完了ポップアップ-->
+ <ons-modal direction="up" id="insp-popup">
+      <div class="confirmed-popup">
+    <div class="popup-wrap">
+      <p class="p-heading">検品計測の記録情報を保存しました。</p>
+      <p class="mb-20"><ons-button class="btn-insp" onclick="modalGoInsp()">続けて検品計測する</ons-button></p>
+      <p class="mb-20"><ons-button class="btn-insp" onclick="modalGoHome()">ホーム画面に戻る</ons-button></p>
+    </div>
+  </div>
+</ons-modal>
+<!-- 検品計測完了ポップアップ END-->
+
+<!-- AI0300 メタル預け画面-->
+<template id="metal.html">
+ <ons-page>
+    <ons-toolbar>
+		<div class="left">
+      <ons-back-button class="back-button"></ons-back-button>
+			<div class="header_logo"><a onclick="fn.load('home.html')"><img src="img/evi-logo.png" width="80" alt="Evi計り"></a></div>
+		</div>
+		<div class="center">
+			<div class="header_pw_display"><div class="label">技工所に教える<br/>パスワード</div><div class="pw_cont">1357</div></div>
+		</div>
+      <div class="right">
+        <ons-toolbar-button onclick="fn.open()">
+          <div id="hamburger_menu">
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="cha">MENU</div>
+      </div>
+      </ons-toolbar-button>
+      </div>
+    </ons-toolbar>
+	  <div class="content">
+		  <div class="page_title"><h1>メタル預け</h1></div>
+		  <div class="page-content center">
+       <p class="p-heading">技工所に預けるメタルを撮影しましょう</p>
+       <p>メタルの種類を選択してください：</p>
+        <form class="switch-buttons" id="metal">
+        <div class="switch-col">
+            <input type="radio" id="metal1" name="metal" value="12% Pd" />
+            <label for="metal1">12% Pd</label>
+            <input type="radio" id="metal2" name="metal" value="18K" />
+            <label for="metal2">18K</label>
+            <input type="radio" id="metal3" name="metal" value="CoCr" />
+            <label for="metal3">CoCr</label>
+        </div>
+        <div class="switch-col">
+            <input type="radio" id="metal4" name="metal" value="シルバー" />
+            <label for="metal4">シルバー</label>
+            <input type="radio" id="metal5" name="metal" value="白金加金" />
+            <label for="metal5">白金加金</label>
+            <input type="radio" id="metal6" name="metal" value="セミプレ" />
+            <label for="metal6">セミプレ</label>
+        </div>
+        </form>
+        <div class="flex-row mt-40">
+          <div class="flex-50">
+          </div>
+          <div class="flex-50">
+            <ons-button class="btn-search-other" onclick="fn.load('metal-search.html')">他のメタルを検索</ons-button>
+          </div>
+        </div>
+        <p>技工所を選択してください：</p>
+        <form class="switch-buttons" id="lab">
+            <div class="switch-col">
+                <input type="radio" id="lab1" name="lab" value="技工所1" />
+                <label for="lab1">株式会社佐藤商事</label>
+                <input type="radio" id="lab2" name="lab" value="技工所2" />
+                <label for="lab2">デンタルサプライ</label>
+                <input type="radio" id="lab3" name="lab" value="技工所3" />
+                <label for="lab3">調布技工所</label>
+            </div>
+            <div class="switch-col">
+                <input type="radio" id="lab4" name="lab" value="技工所4" />
+                <label for="lab4">東京デンタル</label>
+                <input type="radio" id="lab5" name="lab" value="技工所5" />
+                <label for="lab5">新宿デンタルラボ</label>
+                <input type="radio" id="lab6" name="lab" value="技工所6" />
+                <label for="lab6" class="long">株式会社ファストサプライ歯科技工所</label>
+            </div>
+            </form>
+        <div class="flex-row mt-40">
+          <div class="flex-50">
+          </div>
+          <div class="flex-50">
+            <ons-button class="btn-search-other" onclick="fn.load('lab-search.html')">他の技工所を検索</ons-button>
+          </div>
+        </div>
+        <p class="p-heading">医院から預けるメタルを個数がわかるように広げて撮影してください：</p>
+        <div class="flex-row mt-20 buttons-width">
+          <div class="flex-50">
+            <ons-button class="btn-blue-50" onclick="fn.load('manual-input.html')">g数を手入力</ons-button>
+          </div>
+          <div class="flex-50">
+            <ons-button class="btn-blue-50" onclick="fn.load('scales-input.html')">計りで自動入力</ons-button>
+          </div>
+        </div>
+		</div>
+      </div>
+    </div>  
+  </ons-page>
+</template>
+<!-- AI0300 メタル預け画面 END-->
+
+<!-- AI0330 メタル検索-->
+<template id="metal-search.html">
+	<ons-page>
+    <ons-toolbar>
+		<div class="left">
+      <ons-back-button class="back-button"></ons-back-button>
+			<div class="header_logo"><a onclick="fn.load('home.html')"><img src="img/evi-logo.png" width="80" alt="Evi計り"></a></div>
+		</div>
+		<div class="center">
+			<div class="header_pw_display"><div class="label">技工所に教える<br/>パスワード</div><div class="pw_cont">1357</div></div>
+		</div>
+      <div class="right">
+        <ons-toolbar-button onclick="fn.open()">
+        <div id="hamburger_menu">
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="cha">MENU</div>
+        </div>
+        </ons-toolbar-button>
+      </div>
+    </ons-toolbar>
+	  <div class="content">
+		  <div class="page_title"><h1>メタル検索</h1></div>
+        <div class="page-content">
+        <div class="buttons-width">
+          <ons-search-input placeholder="名前で検索" class="m-search" modifier="material" onchange=""></ons-search-input>
+          <p class="mt-20 mb-20"><ons-button class="btn-insp" onclick="">検索</ons-button></p>
+        </div>
+        <form class="switch-buttons" id="metal">
+        <div class="switch-col">
+            <input type="radio" id="metal1" name="metal" value="12% Pd" />
+            <label for="metal1">12% Pd</label>
+            <input type="radio" id="metal2" name="metal" value="18K" />
+            <label for="metal2">18K</label>
+            <input type="radio" id="metal3" name="metal" value="CoCr" />
+            <label for="metal3">CoCr</label>
+        </div>
+        <div class="switch-col">
+            <input type="radio" id="metal4" name="metal" value="シルバー" />
+            <label for="metal4">シルバー</label>
+            <input type="radio" id="metal5" name="metal" value="白金加金" />
+            <label for="metal5">白金加金</label>
+            <input type="radio" id="metal6" name="metal" value="セミプレ" />
+            <label for="metal6">セミプレ</label>
+        </div>
+        </form>
+        <div class="mt-50 buttons-width"><ons-button class="btn-insp" onclick="eviNavigator.popPage()">選択</ons-button></div>
+        <p class="p-heading buttons-width">メタル一覧にない場合は各種設定のメタル一覧画面から管理者にメタルの登録を依頼してください。</p>
+      </div>
+    </div> 
+	</ons-page>
+</template>
+<!-- AI0330 メタル検索 END-->
+
+<!-- AI0340 技工所一覧検索-->
+<template id="lab-search.html">
+	<ons-page>
+    <ons-toolbar>
+		<div class="left">
+      <ons-back-button class="back-button"></ons-back-button>
+			<div class="header_logo"><a onclick="fn.load('home.html')"><img src="img/evi-logo.png" width="80" alt="Evi計り"></a></div>
+		</div>
+		<div class="center">
+			<div class="header_pw_display"><div class="label">技工所に教える<br/>パスワード</div><div class="pw_cont">1357</div></div>
+		</div>
+      <div class="right">
+        <ons-toolbar-button onclick="fn.open()">
+          <div id="hamburger_menu">
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="cha">MENU</div>
+          </div>
+        </ons-toolbar-button>
+      </div>
+    </ons-toolbar>
+	  <div class="content">
+		  <div class="page_title"><h1>技工所一覧</h1></div>
+      <div class="page-content">
+      <div class="buttons-width">
+        <form class="switch-buttons-col" id="clinic">
+            <input type="radio" id="lab1" name="lab" value="技工所1" />
+            <label for="lab1">株式会社佐藤商事</label>
+            <input type="radio" id="lab2" name="lab" value="技工所2" />
+            <label for="lab2">デンタルサプライ</label>
+            <input type="radio" id="lab3" name="lab" value="技工所3" />
+            <label for="lab3">調布技工所</label>
+            <input type="radio" id="lab4" name="lab" value="技工所4" />
+            <label for="lab4">東京デンタル</label>
+            <input type="radio" id="lab5" name="lab" value="技工所5" />
+            <label for="lab5">新宿デンタルラボ</label>
+            <input type="radio" id="lab6" name="lab" value="技工所6" />
+            <label for="lab6" class="long">株式会社ファストサプライ歯科技工所</label>
+        </form>
+        </div>
+        <div class="mt-50 mb-20 buttons-width"><ons-button class="btn-insp" onclick="eviNavigator.popPage()">選択</ons-button></div>
+        <p class="p-heading mt-20">技工所一覧にない場合は医院マイページの技工所一覧画面から登録してください。</p>
+      </div>
+    </div> 
+	</ons-page>
+</template>
+<!-- AI0340 技工所一覧検索 END-->
+
+<!-- AI0311 メタル預けのグラム数入力-->
+<template id="manual-input.html">
+  <ons-page>
+    <ons-toolbar>
+		<div class="left">
+      <ons-back-button class="back-button"></ons-back-button>
+			<div class="header_logo"><a onclick="fn.load('home.html')"><img src="img/evi-logo.png" width="80" alt="Evi計り"></a></div>
+		</div>
+		<div class="center">
+			<div class="header_pw_display"><div class="label">技工所に教える<br/>パスワード</div><div class="pw_cont">1357</div></div>
+		</div>
+      <div class="right">
+        <ons-toolbar-button onclick="fn.open()">
+          <div id="hamburger_menu">
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="cha">MENU</div>
+      </div>
+      </ons-toolbar-button>
+      </div>
+    </ons-toolbar>
+	  <div class="content">
+		  <div class="page_title"><h1>メタル預け</h1></div>
+		  <div class="page-content center">
+       <div class="photo-taken">
+         <a href="#"><div class="photo-retake-button">再撮影</div></a>
+         <img src="img/dummy_metals.jpg">
+       </div>
+       <p class="p-heading font-gray">預けるメタルのg数を入力してください：</p>
+       <div class="text-error">数字のみ、最大6桁＋2小数点</div>
+       <div class="text-xl dark">12%Pd 
+         <ons-input id="metal-grams" placeholder="00.00" type="number" class="grams-input" step="0.01" min="0" max="9" oninput="javascript: if (this.value.length > 9) this.value = this.value.slice(0, 9);"></ons-input>
+          g</div>
+       <div class="buttons-width">
+        <p class="mt-10"><ons-button class="btn-insp" onclick="fn.load('grams-confirm.html')">次へ</ons-button></p>
+       </div>
+      </div>
+    </div>  
+  </ons-page>
+</template>
+<!-- AI0311 メタル預けのグラム数入力 END-->
+
+<!-- AI0321 メタル預けの計測-->
+<template id="scales-input.html">
+  <ons-page>
+    <ons-toolbar>
+		<div class="left">
+      <ons-back-button class="back-button"></ons-back-button>
+			<div class="header_logo"><a onclick="fn.load('home.html')"><img src="img/evi-logo.png" width="80" alt="Evi計り"></a></div>
+		</div>
+		<div class="center">
+			<div class="header_pw_display"><div class="label">技工所に教える<br/>パスワード</div><div class="pw_cont">1357</div></div>
+		</div>
+      <div class="right">
+        <ons-toolbar-button onclick="fn.open()">
+          <div id="hamburger_menu">
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="cha">MENU</div>
+      </div>
+      </ons-toolbar-button>
+      </div>
+    </ons-toolbar>
+	  <div class="content">
+		  <div class="page_title"><h1>メタル預け</h1></div>
+	 <div class="page-content center">
+       <div class="photo-taken">
+          <a href="#"><div class="photo-retake-button">再撮影</div></a>
+         <img src="img/dummy_scales.jpg">
+       </div>
+       <div class="text-xl dark mt-10">12%Pd <span class="font-pink">26.9</span> g</div>
+       <div class="buttons-width">
+        <p class="mt-20"><ons-button class="btn-insp" onclick="fn.load('grams-confirm.html')">次へ</ons-button></p>
+       </div>
+      </div>
+    </div>  
+  </ons-page>
+</template>
+<!-- AI0321 メタル預けの計測 END-->
+
+<!-- AI0312 メタル預け確認-->
+<template id="grams-confirm.html">
+  <ons-page>
+    <ons-toolbar>
+		<div class="left">
+      <ons-back-button class="back-button"></ons-back-button>
+			<div class="header_logo"><a onclick="fn.load('home.html')"><img src="img/evi-logo.png" width="80" alt="Evi計り"></a></div>
+		</div>
+		<div class="center">
+			<div class="header_pw_display"><div class="label">技工所に教える<br/>パスワード</div><div class="pw_cont">1357</div></div>
+		</div>
+      <div class="right">
+        <ons-toolbar-button onclick="fn.open()">
+          <div id="hamburger_menu">
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="cha">MENU</div>
+      </div>
+      </ons-toolbar-button>
+      </div>
+    </ons-toolbar>
+	  <div class="content">
+		  <div class="page_title"><h1>メタル預け</h1></div>
+		  <div class="page-content">
+      <ons-row>
+       <div class="confirm-wrap">
+        2020年02月10日（月）15:07<br>
+        メタル: 12%Pd<br>
+        グラム数: 26.9g<br>
+        技工所名: デンタルサプライ
+       </div>
+      </ons-row>
+      <ons-row class="flex-between">
+          <ons-column>
+            <div><ons-button class="btn-metal text-xs" onclick="fn.load('grams-confirm-sign.html')">受領サイン</ons-button></div>
+          </ons-column>
+          <ons-column>
+            <div><ons-button class="btn-metal text-xs" onclick="fn.load('grams-confirm-qr.html')">QRコードリーダー</ons-button></div>
+          </ons-column>
+        </ons-row>
+        <p class="mt-10 center">技工所がEvi計りを購入するとQRコードを読み込むことができます。</p>
+        <div class="buttons-width">
+          <ons-row>
+            <div class="sign-container hidden">
+              <table>
+                <th class="tb-header">手書き受領サイン</th>
+                <tr><td><img src="img/dummy_sign.png"></td></tr>
+              </table>
+            </div>
+          </ons-row>
+        <ons-row class="mt-20 mb-15"><ons-button class="btn-grams-confirm gray" onclick="fn.load('grams-confirm-sign.html')">登録</ons-button></ons-row>
+        </div>
+       <div class="cancel_area center">
+		  <a onclick="fn.load('home.html')"  tappable>キャンセルしてホーム画面へ</a>
+		</div>
+      </div>
+    </div>  
+  </ons-page>
+</template>
+<!-- AI0312 メタル預け確認 END-->
+
+<!-- AI0313 預かりサイン入力-->
+<template id="grams-confirm-sign.html">
+  <ons-page>
+    <ons-toolbar>
+		<div class="left">
+      <ons-back-button class="back-button"></ons-back-button>
+			<div class="header_logo"><a onclick="fn.load('home.html')"><img src="img/evi-logo.png" width="80" alt="Evi計り"></a></div>
+		</div>
+		<div class="center">
+			<div class="header_pw_display"><div class="label">技工所に教える<br/>パスワード</div><div class="pw_cont">1357</div></div>
+		</div>
+      <div class="right">
+        <ons-toolbar-button onclick="fn.open()">
+          <div id="hamburger_menu">
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="cha">MENU</div>
+      </div>
+      </ons-toolbar-button>
+      </div>
+    </ons-toolbar>
+	  <div class="content">
+		  <div class="page_title"><h1>メタル預け</h1></div>
+		  <div class="page-content">
+      <ons-row>
+       <div class="confirm-wrap">
+        2020年02月10日（月）15:07<br>
+        メタル: 12%Pd<br>
+        グラム数: 26.9g<br>
+        技工所名: デンタルサプライ
+       </div>
+      </ons-row>
+      <ons-row class="flex-between">
+          <ons-column>
+            <div><ons-button class="btn-metal text-xs" onclick="">受領サイン</ons-button></div>
+          </ons-column>
+          <ons-column>
+            <div><ons-button class="btn-metal text-xs" onclick="">QRコードリーダー</ons-button></div>
+          </ons-column>
+        </ons-row>
+        <div class="buttons-width">
+          <ons-row>
+            <div class="sign-container mt-40">
+              <table>
+                <th class="tb-header">手書き受領サイン</th>
+                <tr><td><img src="img/dummy_sign.png"></td></tr>
+              </table>
+            </div>
+          </ons-row>
+        <ons-row class="mt-20 mb-15"><ons-button class="btn-grams-confirm" onclick="showModalM()">登録</ons-button></ons-row>
+        </div>
+       <div class="cancel_area center">
+		  	<a onclick="fn.load('home.html')"  tappable>キャンセルしてホーム画面へ</a>
+		  </div>
+      </div>
+    </div>  
+  </ons-page>
+</template>
+<!-- AI0313 預かりサイン入力 END-->
+
+<!-- AI0323 QRコード読み取り後画面-->
+<template id="grams-confirm-qr.html">
+  <ons-page>
+    <ons-toolbar>
+		<div class="left">
+      <ons-back-button class="back-button"></ons-back-button>
+			<div class="header_logo"><a onclick="fn.load('home.html')"><img src="img/evi-logo.png" width="80" alt="Evi計り"></a></div>
+		</div>
+		<div class="center">
+			<div class="header_pw_display"><div class="label">技工所に教える<br/>パスワード</div><div class="pw_cont">1357</div></div>
+		</div>
+      <div class="right">
+        <ons-toolbar-button onclick="fn.open()">
+          <div id="hamburger_menu">
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="cha">MENU</div>
+      </div>
+      </ons-toolbar-button>
+      </div>
+    </ons-toolbar>
+	  <div class="content">
+		  <div class="page_title"><h1>メタル預け</h1></div>
+		  <div class="page-content">
+      <ons-row>
+       <div class="confirm-wrap">
+        2020年02月10日（月）15:07<br>
+        メタル: 12%Pd<br>
+        グラム数: 26.9g<br>
+        技工所名: デンタルサプライ
+       </div>
+      </ons-row>
+      <ons-row class="flex-between">
+          <ons-column>
+            <div><ons-button class="btn-metal text-xs" onclick="">受領サイン</ons-button></div>
+          </ons-column>
+          <ons-column>
+            <div><ons-button class="btn-metal text-xs" onclick="">QRコードリーダー</ons-button></div>
+          </ons-column>
+        </ons-row>
+        <div class="buttons-width">
+          <ons-row>
+            <div class="sign-container mt-40">
+              <table>
+                <th class="tb-header">QRコードで読み込んだ情報</th>
+                <tr><td class="qr-td">
+                  技工所名<br>
+                  担当者名
+                </td></tr>
+              </table>
+            </div>
+          </ons-row>
+        <ons-row class="mt-20 mb-15"><ons-button class="btn-grams-confirm" onclick="showModalM()">登録</ons-button></ons-row>
+        </div>
+       <div class="cancel_area center">
+		  	<a onclick="fn.load('home.html')"  tappable>キャンセルしてホーム画面へ</a>
+		  </div>
+      </div>
+    </div>  
+  </ons-page>
+</template>
+<!-- I0323 QRコード読み取り後画面 END-->
+
+<!-- AI0314 メタル預けの完了ポップアップ-->
+ <ons-modal direction="up" id="metal-popup">
+    <div class="confirmed-popup">
+    <div class="popup-wrap">
+      <p class="p-heading">メタル預けの記録情報を保存しました。</p>
+      <p class="mb-20"><ons-button class="btn-insp" onclick="modalGoMetal()">続けて預ける</ons-button></p>
+      <p class="mb-20"><ons-button class="btn-insp" onclick="modalGoHomeM()">ホーム画面に戻る</ons-button></p>
+    </div>
+  </div>
+</ons-modal>
+<!-- AI0314 メタル預けの完了ポップアップ END-->
+
+
+<!-- AI0400 各種設定画面-->
+<template id="settings.html">
+  <ons-page>
+    <ons-toolbar>
+		<div class="left">
+      <ons-back-button class="back-button"></ons-back-button>
+			<div class="header_logo"><a onclick="fn.load('home.html')"><img src="img/evi-logo.png" width="80" alt="Evi計り"></a></div>
+		</div>
+		<div class="center">
+			<div class="header_pw_display"><div class="label">技工所に教える<br/>パスワード</div><div class="pw_cont">1357</div></div>
+		</div>
+      <div class="right">
+        <ons-toolbar-button onclick="fn.open()">
+          <div id="hamburger_menu">
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="cha">MENU</div>
+          </div>
+        </ons-toolbar-button>
+      </div>
+    </ons-toolbar>
+	  <div class="content">
+		  <div class="page_title"><h1>各種設定</h1></div>
+		  <div class="page_content buttons-width">
+		  	    <p class="mt-30 mb-20"><ons-button class="btn-browser" onclick="" >技工所一覧</ons-button></p>
+            <p class="mb-20"><ons-button class="btn-browser" onclick="">メタル一覧</ons-button></p>
+            <p><ons-button class="btn-browser">医院マイページ</ons-button></p>
+		  </div>
+      </div> 
+  </ons-page>
+</template>
+<!-- AI0400 各種設定画面 END-->
+
+<!-- AI0410 メ技工所一覧画面-->
+<template id="labs.html">
+	<ons-page>
+    <ons-toolbar>
+		<div class="left">
+      <ons-back-button class="back-button"></ons-back-button>
+			<div class="header_logo"><a onclick="fn.load('home.html')"><img src="img/evi-logo.png" width="80" alt="Evi計り"></a></div>
+		</div>
+		<div class="center">
+			<div class="header_pw_display"><div class="label">技工所に教える<br/>パスワード</div><div class="pw_cont">1357</div></div>
+		</div>
+      <div class="right">
+        <ons-toolbar-button onclick="fn.open()">
+          <div id="hamburger_menu">
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="cha">MENU</div>
+          </div>
+        </ons-toolbar-button>
+      </div>
+    </ons-toolbar>
+	  <div class="content">
+		  <div class="page_title"><h1>技工所一覧</h1></div>
+		  <a onclick="fn.load('lab-info.html')"><ons-list-item modifier="chevron" tappable>技工所1</ons-list-item></a>
+		  <a onclick="fn.load('lab-info.html')"><ons-list-item modifier="chevron" tappable>技工所2</ons-list-item></a>
+      <a onclick="fn.load('lab-info.html')"><ons-list-item modifier="chevron" tappable>技工所3</ons-list-item></a>
+      <a onclick="fn.load('lab-info.html')"><ons-list-item modifier="chevron" tappable>技工所4</ons-list-item></a>
+      <a onclick="fn.load('lab-info.html')"><ons-list-item modifier="chevron" tappable>技工所5</ons-list-item></a>
+      <a onclick="fn.load('lab-info.html')"><ons-list-item modifier="chevron" tappable>技工所6</ons-list-item></a>
+      </div> 
+	</ons-page>
+</template>
+<!-- AI0410 メ技工所一覧画面 END-->
+
+<!-- AI0411 メ技工所一覧画面-->
+<template id="lab-info.html">
+	<ons-page>
+    <ons-toolbar>
+		<div class="left">
+      <ons-back-button class="back-button"></ons-back-button>
+			<div class="header_logo"><a onclick="fn.load('home.html')"><img src="img/evi-logo.png" width="80" alt="Evi計り"></a></div>
+		</div>
+		<div class="center">
+			<div class="header_pw_display"><div class="label">技工所に教える<br/>パスワード</div><div class="pw_cont">1357</div></div>
+		</div>
+      <div class="right">
+        <ons-toolbar-button onclick="fn.open()">
+        <div id="hamburger_menu">
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="cha">MENU</div>
+        </div>
+        </ons-toolbar-button>
+      </div>
+    </ons-toolbar>
+	  <div class="content">
+		  <div class="page_title"><h1>技工所詳細</h1></div>
+      <div class="page-content">
+        <p class="info-title">■ 技工所名／略称</p>
+        <p>技工所１正式名称／技工所１略称</p>
+        <p class="info-title">■ 住所</p>
+        <p>〒224-0015</p>
+        <p>神奈川県横浜市宮前区馬絹1丁目9番5号ノジマ宮前</p>
+        <p class="info-title">■ 電話番号</p>
+        <p>045-911-2225</p>
+        <p class="mt-30"><ons-button class="btn-insp" onclick="fn.load('labs.html')">技工所一覧へ戻る</ons-button></p>
+      </div>
+    </div> 
+	</ons-page>
+</template>
+<!-- AI0411 メ技工所一覧画面 END-->
+
+<!-- AI0420 メタル一覧画面-->
+<template id="metal-list.html">
+	<ons-page>
+    <ons-toolbar>
+		<div class="left">
+      <ons-back-button class="back-button"></ons-back-button>
+			<div class="header_logo"><a onclick="fn.load('home.html')"><img src="img/evi-logo.png" width="80" alt="Evi計り"></a></div>
+		</div>
+		<div class="center">
+			<div class="header_pw_display"><div class="label">技工所に教える<br/>パスワード</div><div class="pw_cont">1357</div></div>
+		</div>
+      <div class="right">
+        <ons-toolbar-button onclick="fn.open()">
+        <div id="hamburger_menu">
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="cha">MENU</div>
+        </div>
+        </ons-toolbar-button>
+      </div>
+    </ons-toolbar>
+	  <div class="content">
+		  <div class="page_title"><h1>メタル一覧</h1></div>
+        <div class="page-content">
+          <ons-search-input placeholder="名前で検索" class="m-search" modifier="material" onchange=""></ons-search-input>
+          <p class="mt-20 mb-20"><ons-button class="btn-insp" onclick="" >検索</ons-button></p>
+        </div>
+        <ons-list class="metal-list">
+            <ons-list-item><span>12% Pd</span></ons-list-item>
+            <ons-list-item><span>18K</span></ons-list-item>
+            <ons-list-item><span>CoCr</span></ons-list-item>
+            <ons-list-item><span>シルバー</span></ons-list-item>
+            <ons-list-item><span>白金加金</span></ons-list-item>
+            <ons-list-item><span>セミプレ</span></ons-list-item>
+        </ons-list>
+        <div class="page-content">
+          <div class="mt-30 mb-20"><ons-button class="btn-insp btn-green" onclick="fn.load('metal-request.html')" >メタル登録問合せ</ons-button></div>
+        </div>
+      </div>
+    </div> 
+	</ons-page>
+</template>
+<!-- AI0420 メタル一覧画面 END-->
+
+<!-- AI0421 メタル登録問合せ-->
+<template id="metal-request.html">
+	<ons-page>
+    <ons-toolbar>
+		<div class="left">
+      <ons-back-button class="back-button"></ons-back-button>
+			<div class="header_logo"><a onclick="fn.load('home.html')"><img src="img/evi-logo.png" width="80" alt="Evi計り"></a></div>
+		</div>
+		<div class="center">
+			<div class="header_pw_display"><div class="label">技工所に教える<br/>パスワード</div><div class="pw_cont">1357</div></div>
+		</div>
+      <div class="right">
+        <ons-toolbar-button onclick="fn.open()">
+        <div id="hamburger_menu">
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="ham_border"></div>
+			  <div class="cha">MENU</div>
+        </div>
+        </ons-toolbar-button>
+      </div>
+    </ons-toolbar>
+	  <div class="content">
+		  <div class="page_title"><h1>メタル一覧</h1></div>
+        <div class="page-content">
+        <p class="p-heading">管理者にメタルの登録を依頼します</p>
+        <ons-row>
+          <ons-input id="metal-name" placeholder="メタル名を入力してください" type="text" class="m-search"></ons-input>
+        </ons-row>
+        <p>＊メタルの登録には、数日かかる場合がございます。</p>
+        <div class="mt-30 mb-20"><ons-button class="btn-insp btn-green" onclick="" >メタル登録問合せ</ons-button></div>
+      </div>
+    </div> 
+	</ons-page>
+</template>
+<!-- AI0421 メタル登録問合せ END-->
+	
+</body>
+</html>
