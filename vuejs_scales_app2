@@ -1,0 +1,147 @@
+<!-- AI0330 メタル検索 -->
+<template>
+  <v-ons-page>
+    <ClinicHeader :user-info="userInfo" :page-view="pageView" @back="back" @move-for-reset="moveForReset"/>
+    <div class="content">
+      <div class="page_title"><h1>メタル検索</h1></div>
+      <div class="page-content">
+        <div class="buttons-width">
+          <v-ons-search-input v-model="searchText" placeholder="名前で検索" class="m-search" modifier="material"></v-ons-search-input>
+          <p class="mt-20 mb-20"><v-ons-button @click="search()" class="btn-insp" :class="{gray:disableSearch}" :disabled="disableSearch">検索</v-ons-button></p>
+        </div>
+        <div class="loading" v-if="pageView.callingAPI">
+          データを取得中です
+        </div>
+        <form class="switch-buttons" id="metal">
+          <div class="switch-col">
+            <div v-for="metal in metalListOfEvenIndex" :key="metal.metal_id" class="switch-col">
+              <label
+                :for="'metal-' + metal.metal_id"
+                :class="{ long : get2byteLength(metal.metal_abbr) >= 8 , 'button-checked' : metal.metal_id == appForm.evidence.metal_id }">
+                <v-ons-radio
+                :input-id="'metal-' + metal.metal_id"
+                :value="metal.metal_id"
+                v-model="appForm.evidence.metal_id"
+                @click="setMetal(metal.metal_abbr)" />
+                {{metal.metal_abbr}}
+              </label>
+            </div>
+          </div>
+          <div class="switch-col">
+            <div v-for="metal in metalListOfOddIndex" :key="metal.metal_id" class="switch-col">
+              <label
+                :for="'metal-' + metal.metal_id"
+                :class="{ long : get2byteLength(metal.metal_abbr) >= 8 , 'button-checked' : metal.metal_id == appForm.evidence.metal_id }">
+                <v-ons-radio
+                :input-id="'metal-' + metal.metal_id"
+                :value="metal.metal_id"
+                v-model="appForm.evidence.metal_id"
+                @click="setMetal(metal.metal_abbr)" />
+                {{metal.metal_abbr}}
+              </label>
+            </div>
+            <div v-if="metalListOfEvenIndex.length > metalListOfOddIndex.length" class="switch-col">
+              <v-ons-radio class="hidden" />
+              <label class="hidden"></label>
+            </div>
+          </div>
+        </form>
+        <div class="mt-20 buttons-width">
+          <v-ons-button @click="back()" class="btn-insp" :class="{gray:disableAdd}" :disabled="disableAdd">選択追加</v-ons-button>
+        </div>
+        <p class="p-heading buttons-width">メタル一覧にない場合は各種設定のメタル一覧画面からEvi計り運営側にメタルの登録を依頼してください。</p>
+      </div>
+    </div>
+  </v-ons-page>
+</template>
+
+<script>
+import ClinicHeader from '@/views/clinic/Header.vue'
+
+export default {
+
+  name: 'ClinicMetalSearch',
+
+  components: {
+    ClinicHeader
+  },
+
+  props: {
+    userInfo: Object,
+    pageView: Object,
+    appForm: Object
+  },
+
+  data() {
+    return {
+      searchText: ""
+    }
+  },
+
+  computed: {
+    metalListOfEvenIndex () {
+      return this.appForm.metalListByMetalName.filter((value, index) => { return index % 2 === 0 })
+    },
+
+    metalListOfOddIndex () {
+      return this.appForm.metalListByMetalName.filter((value, index) => { return index % 2 !== 0 })
+    },
+
+    disableSearch () {
+      return this.searchText == ""
+    },
+
+    disableAdd () {
+      return this.appForm.metalListByMetalName.length == 0 ||
+             this.appForm.evidence.metal_id == "" ||
+             this.appForm.evidence.metal_id == "metal_search"
+    }
+  },
+
+  created() {
+    // ヘッダーの戻るボタン表示
+    this.pageView.isBackButtonShown = true
+
+    this.appForm.metalListByMetalName = []
+  },
+
+  methods: {
+    back () {
+      this.$emit('back')
+    },
+
+    moveForReset (content) {
+      this.$emit('move-for-reset', content)
+    },
+
+    search () {
+      this.setMetalListByMetalName(this.searchText)
+    },
+
+    setMetalListByMetalName (query) {
+      this.$emit('set-metal-list-by-metal-name', query)
+    },
+
+    setMetal (metalAbbr) {
+      this.appForm.evidence.metal_abbr = metalAbbr
+    },
+
+    get2byteLength (str) {
+      let count = 0
+
+      for (let i = 0, len = str.length; i < len; i++) {
+        let c = str.charCodeAt(i)
+
+        if (!str[i].match(/\r?\n/g)) {
+          if (c >= 0x0 && c <= 0x7f) {
+            count += 0.5
+          } else {
+            count += 1
+          }
+        }
+      }
+      return count
+    }
+  }
+}
+</script>
