@@ -1,0 +1,1181 @@
+<!-- 7-1.納期カレンダートップ画面 -->
+<template id="delivery-calendar.html">
+  <ons-page>
+    <script>
+      const selected = null
+      const vue = new Vue({
+        el: '#app-cal',
+        components: {
+        VueNumberInput: window['number-input']
+        },
+        data() {
+          return {
+            selectedMenu: 0,
+            selectedCategory: 0,
+            selectedSub: 0,
+            selectedSub2: 0,
+            selectedItem: null,
+            selectedItems: [],
+            subLabel: false,
+            menu: [
+              {id: 1, label: '保険架工'},
+              {id: 2, label: '自費架工'},
+              {id: 3, label: '保険義歯'},
+              {id: 4, label: '自費義歯'},
+              {id: 5, label: 'インプラント'},
+              {id: 6, label: 'マウスピース'},
+              {id: 7, label: '矯正'},
+              {id: 8, label: '小児'}
+            ],
+            categories1: [
+              {id: 1, menu: 1, label: 'インレー', image: 'icon-1-inlay.svg'},
+              {id: 2, menu: 1, label: 'クラウン', image: 'icon-2-crown.svg'},
+              {id: 3, menu: 1, label: 'ブリッジ', image: 'icon-3-bridge.svg'},
+              {id: 4, menu: 1, label: 'コア', image: 'icon-4-core.svg'},
+              {id: 5, menu: 1, label: 'レジン系', image: 'icon-2-crown.svg'},
+              {id: 6, menu: 1, label: '前装冠', image: 'icon-2-crown.svg'},
+              {id: 7, menu: 1, label: '前装ブリッジ', image: 'icon-3-bridge.svg'},
+              {id: 8, menu: 1, label: 'CADCAM冠', image: 'icon-2-crown.svg'}
+            ],
+            categories2: [
+              {id: 1, menu: 2, label: 'フルジルコニア', image: 'icon-2-crown.svg'},
+              {id: 2, menu: 2, label: 'ジルコニアセラミック', image: 'icon-2-crown.svg'},
+              {id: 3, menu: 2, label: 'オールセラミック', image: 'icon-2-crown.svg'},
+              {id: 4, menu: 2, label: 'メタルボンド', image: 'icon-2-crown.svg'},
+              {id: 5, menu: 2, label: 'ハイブリッド', image: 'icon-2-crown.svg'},
+              {id: 6, menu: 2, label: '貴金属', image: 'icon-2-crown.svg'},
+              {id: 7, menu: 2, label: 'コア', image: 'icon-4-core.svg'}
+            ],
+            categories3: [
+              {id: 1, menu: 3, label: '総義歯', image: 'icon-6-denture.svg'},
+              {id: 2, menu: 3, label: '部分義歯', image: 'icon-5-grasp.svg'},
+              {id: 3, menu: 3, label: '維持装置', image: 'icon-5-grasp.svg'}
+            ],
+            categories4: [
+              {id: 1, menu: 4, label: '金属床', image: 'icon-6-denture.svg'},
+              {id: 2, menu: 4, label: 'ノンクラスプ', image: 'icon-5-grasp.svg'},
+              {id: 3, menu: 4, label: '維持装置', image: 'icon-5-grasp.svg'},
+              {id: 4, menu: 4, label: 'コーヌス・磁性・軟性裏装', image: 'icon-6-denture.svg'}
+            ],
+            categories5: [
+              {id: 1, menu: 5, label: '模型', image: 'icon-2-crown.svg'},
+              {id: 2, menu: 5, label: 'ステント・ガイド', image: 'icon-2-crown.svg'},
+              {id: 3, menu: 5, label: 'アバットメント', image: 'icon-2-crown.svg'},
+              {id: 4, menu: 5, label: '上部構造(セメント)', image: 'icon-2-crown.svg'},
+              {id: 5, menu: 5, label: '上部構造(スクリュー)', image: 'icon-2-crown.svg'}
+            ],
+            categories6: [
+              {id: 1, menu: 6, label: 'ソフトタイプ', image: 'icon-1-inlay.svg'},
+              {id: 2, menu: 6, label: 'ハードタイプ', image: 'icon-2-crown.svg'}
+            ],
+            categories7: [
+              {id: 1, menu: 7, label: 'ワイヤー矯正', image: 'icon-5-grasp.svg'},
+              {id: 2, menu: 7, label: 'マウスピース矯正', image: 'icon-8.svg'},
+              {id: 3, menu: 7, label: 'リテーナー', image: 'icon-5-grasp.svg'}
+            ],
+            categories8: [
+              {id: 1, menu: 8, label: '乳⻭冠', image: 'icon-2-crown.svg'},
+              {id: 2, menu: 8, label: '保隙装置', image: 'icon-2-crown.svg'}
+            ],
+            sub1_1: [
+              {id: 1, menu: 1, cat: 1, label: '単純インレー', image: 'icon-1-inlay.svg'},
+              {id: 2, menu: 1, cat: 1, label: '複雑インレー', image: 'icon-1-inlay.svg'},
+              {id: 3, menu: 1, cat: 1, label: 'MODインレー', image: 'icon-1-inlay.svg'},
+              {id: 4, menu: 1, cat: 1, label: 'アンレー', image: 'icon-1-inlay.svg'},
+              {id: 5, menu: 1, cat: 1, label: 'ポストインレー', image: 'icon-1-inlay.svg'},
+              {id: 6, menu: 1, cat: 1, label: 'ポストアンレー', image: 'icon-1-inlay.svg'}
+            ],
+            sub1_2: [
+              {id: 1, menu: 1, cat: 2, label: 'クラウン', image: 'icon-2-crown.svg'},
+              {id: 2, menu: 1, cat: 2, label: '3/4冠', image: 'icon-2-crown.svg'},
+              {id: 3, menu: 1, cat: 2, label: '4/5冠', image: 'icon-2-crown.svg'},
+              {id: 4, menu: 1, cat: 2, label: 'ポストクラウン', image: 'icon-2-crown.svg'},
+              {id: 5, menu: 1, cat: 2, label: 'ポンティック', image: 'icon-2-crown.svg'}
+            ],
+            sub1_3: [
+              {id: 1, menu: 1, cat: 3, label: '2歯連結', image: 'icon-3-bridge.svg'},
+              {id: 2, menu: 1, cat: 3, label: '3歯ブリッジ', image: 'icon-3-bridge.svg'},
+              {id: 3, menu: 1, cat: 3, label: '4歯ブリッジ', image: 'icon-3-bridge.svg'},
+              {id: 4, menu: 1, cat: 3, label: '5歯ブリッジ', image: 'icon-3-bridge.svg'}
+            ],
+            sub1_4: [
+              {id: 1, menu: 1, cat: 4, label: '⾅⻭コア', image: 'icon-4-core.svg'},
+              {id: 2, menu: 1, cat: 4, label: '前⻭コア', image: 'icon-4-core.svg'},
+              {id: 3, menu: 1, cat: 4, label: '⾅⻭ファイバーコア', image: 'icon-4-core.svg'},
+              {id: 4, menu: 1, cat: 4, label: '前⻭ファイバーコア', image: 'icon-4-core.svg'},
+              {id: 5, menu: 1, cat: 4, label: '根⾯版', image: 'icon-4-core.svg'}
+            ],
+            sub1_5: [
+              {id: 1, menu: 1, cat: 5, label: '硬質レジンジャケット冠', image: 'icon-2-crown.svg'},
+              {id: 2, menu: 1, cat: 5, label: '硬質レジンインレー', image: 'icon-1-inlay.svg'},
+              {id: 3, menu: 1, cat: 5, label: '硬質レジンアンレー', image: 'icon-1-inlay.svg'},
+              {id: 4, menu: 1, cat: 5, label: 'TEK', image: 'icon-2-crown.svg'},
+              {id: 5, menu: 1, cat: 5, label: 'レジンポンティック', image: 'icon-2-crown.svg'},
+              {id: 6, menu: 1, cat: 5, label: '普通レジン継続歯', image: 'icon-2-crown.svg'},
+              {id: 7, menu: 1, cat: 5, label: '普通レジンジャケット冠', image: 'icon-2-crown.svg'}
+            ],
+            sub1_6: [
+              {id: 1, menu: 1, cat: 6, label: '硬質レジン前装冠', image: 'icon-2-crown.svg'},
+              {id: 2, menu: 1, cat: 6, label: '硬質レジン前装ポンティック', image: 'icon-2-crown.svg'},
+              {id: 3, menu: 1, cat: 6, label: '硬質レジン前装継続⻭', image: 'icon-2-crown.svg'}
+            ],
+            sub1_7: [
+              {id: 1, menu: 1, cat: 7, label: '2⻭連結', image: 'icon-3-bridge.svg'},
+              {id: 2, menu: 1, cat: 7, label: '3⻭ブリッジ', image: 'icon-3-bridge.svg'},
+              {id: 3, menu: 1, cat: 7, label: '4⻭ブリッジ', image: 'icon-3-bridge.svg'},
+              {id: 4, menu: 1, cat: 7, label: '5⻭ブリッジ', image: 'icon-3-bridge.svg'},
+              {id: 5, menu: 1, cat: 7, label: '6⻭ブリッジ', image: 'icon-3-bridge.svg'}
+            ],
+            sub1_8: [
+              {id: 1, menu: 1, cat: 8, label: '⼩⾅⻭CADCAM冠', image: 'icon-2-crown.svg'},
+              {id: 2, menu: 1, cat: 8, label: '⼤⾅⻭CADCAM冠', image: 'icon-2-crown.svg'}
+            ],
+            sub2_1: [
+              {id: 1, menu: 2, cat: 1, label: 'フルジルコニアクラウン', image: 'icon-2-crown.svg'},
+              {id: 2, menu: 2, cat: 1, label: 'フルジルコニアインレー', image: 'icon-1-inlay.svg'},
+              {id: 3, menu: 2, cat: 1, label: 'フルジルコニア グラデーション', image: 'icon-2-crown.svg'}
+            ],
+            sub2_2: [
+              {id: 1, menu: 2, cat: 2, label: 'ジルコニアセラミック', image: 'icon-2-crown.svg'},
+              {id: 2, menu: 2, cat: 2, label: 'ジルコニアセラミック特殊色', image: 'icon-2-crown.svg'}
+            ],
+            sub2_3: [
+              {id: 1, menu: 2, cat: 3, label: 'e.maxクラウン', image: 'icon-2-crown.svg'},
+              {id: 2, menu: 2, cat: 3, label: 'e.maxインレー', image: 'icon-1-inlay.svg'},
+              {id: 3, menu: 2, cat: 3, label: 'e.maxラミネートベニヤ', image: 'icon-2-crown.svg'}
+            ],
+            sub2_4: [
+              {id: 1, menu: 2, cat: 4, label: 'メタルボンドフルベイク', image: 'icon-2-crown.svg'},
+              {id: 2, menu: 2, cat: 4, label: 'メタルボンドパーシャル', image: 'icon-2-crown.svg'},
+              {id: 3, menu: 2, cat: 4, label: 'メタルボンドカラーレス', image: 'icon-2-crown.svg'}
+            ],
+            sub2_5: [
+              {id: 1, menu: 2, cat: 5, label: 'ハイブリッドインレー', image: 'icon-1-inlay.svg'},
+              {id: 2, menu: 2, cat: 5, label: 'ハイブリッドアンレー', image: 'icon-1-inlay.svg'},
+              {id: 3, menu: 2, cat: 5, label: 'ハイブリッドクラウン', image: 'icon-2-crown.svg'},
+              {id: 4, menu: 2, cat: 5, label: 'ハイブリッドジャケット冠', image: 'icon-2-crown.svg'},
+              {id: 5, menu: 2, cat: 5, label: 'ハイブリッドラミネートベニア', image: 'icon-2-crown.svg'}
+            ],
+            sub2_6: [
+              {id: 1, menu: 2, cat: 6, label: 'ゴールドインレー', image: 'icon-1-inlay.svg'},
+              {id: 2, menu: 2, cat: 6, label: 'ゴールドアンレー', image: 'icon-1-inlay.svg'},
+              {id: 3, menu: 2, cat: 6, label: 'ゴールドクラウン', image: 'icon-2-crown.svg'}
+            ],
+            sub2_7: [
+              {id: 1, menu: 2, cat: 7, label: '臼歯コア', image: 'icon-4-core.svg'},
+              {id: 2, menu: 2, cat: 7, label: '前歯コア', image: 'icon-4-core.svg'},
+              {id: 3, menu: 2, cat: 7, label: '臼歯ファイバーコア', image: 'icon-4-core.svg'},
+              {id: 4, menu: 2, cat: 7, label: '前歯ファイバーコア', image: 'icon-4-core.svg'},
+              {id: 5, menu: 2, cat: 7, label: 'チタンコア', image: 'icon-4-core.svg'}
+            ],
+            sub3_1: [
+              {id: 1, menu: 3, cat: 1, label: '個人トレー', image: 'icon-7.svg', sub: false},
+              {id: 2, menu: 3, cat: 1, label: 'ロー提', image: 'icon-8.svg', sub: true},
+              {id: 3, menu: 3, cat: 1, label: '排列試適', image: 'icon-6-denture.svg', sub: false},
+              {id: 4, menu: 3, cat: 1, label: '完成', image: 'icon-6-denture.svg', sub: true}
+            ],
+            sub3_2: [
+              {id: 1, menu: 3, cat: 2, label: '個人トレー', image: 'icon-7.svg', sub: false},
+              {id: 2, menu: 3, cat: 2, label: 'ロー提', image: 'icon-8.svg', sub: true},
+              {id: 3, menu: 3, cat: 2, label: '排列試適', image: 'icon-5-grasp.svg', sub: true},
+              {id: 4, menu: 3, cat: 2, label: '完成', image: 'icon-5-grasp.svg', sub: true}
+            ],
+            sub3_3: [
+              {id: 1, menu: 3, cat: 3, label: 'ワイヤー', image: 'icon-5-grasp.svg', sub: true},
+              {id: 2, menu: 3, cat: 3, label: 'キャスト', image: 'icon-5-grasp.svg', sub: true}
+            ],
+            sub4_1: [
+              {id: 1, menu: 4, cat: 1, label: '個人トレー', image: 'icon-7.svg', sub: false},
+              {id: 2, menu: 4, cat: 1, label: 'ロー提', image: 'icon-8.svg', sub: true},
+              {id: 3, menu: 4, cat: 1, label: '排列試適', image: 'icon-6-denture.svg', sub: true},
+              {id: 4, menu: 4, cat: 1, label: '完成', image: 'icon-6-denture.svg', sub: true}
+            ],
+            sub4_2: [
+              {id: 1, menu: 4, cat: 2, label: '個人トレー', image: 'icon-7.svg', sub: false},
+              {id: 2, menu: 4, cat: 2, label: 'ロー提', image: 'icon-8.svg', sub: true},
+              {id: 3, menu: 4, cat: 2, label: '試適', image: 'icon-6-denture.svg', sub: true},
+              {id: 4, menu: 4, cat: 2, label: '完成', image: 'icon-6-denture.svg', sub: true}
+            ],
+            sub4_3: [
+              {id: 1, menu: 4, cat: 3, label: 'バー', image: 'icon-5-grasp.svg'},
+              {id: 2, menu: 4, cat: 3, label: 'レスト', image: 'icon-5-grasp.svg'},
+              {id: 3, menu: 4, cat: 3, label: 'フック', image: 'icon-5-grasp.svg'},
+              {id: 4, menu: 4, cat: 3, label: 'スパー', image: 'icon-5-grasp.svg'},
+              {id: 5, menu: 4, cat: 3, label: 'リング鉤', image: 'icon-5-grasp.svg'},
+              {id: 6, menu: 4, cat: 3, label: 'ローチ鉤', image: 'icon-5-grasp.svg'},
+              {id: 7, menu: 4, cat: 3, label: '単純鉤', image: 'icon-5-grasp.svg'},
+              {id: 8, menu: 4, cat: 3, label: 'エーカース', image: 'icon-5-grasp.svg'},
+              {id: 9, menu: 4, cat: 3, label: '双⼦鉤', image: 'icon-5-grasp.svg'},
+              {id: 10, menu: 4, cat: 3, label: 'コンビネーション鉤', image: 'icon-5-grasp.svg'}
+            ],
+            sub4_4: [
+              {id: 1, menu: 4, cat: 4, label: 'コーヌス内冠', image: 'icon-6-denture.svg', sub: false},
+              {id: 2, menu: 4, cat: 4, label: 'コーヌス外冠', image: 'icon-6-denture.svg', sub: true},
+              {id: 3, menu: 4, cat: 4, label: 'コーヌス義⻭完成', image: 'icon-6-denture.svg', sub: false},
+              {id: 4, menu: 4, cat: 4, label: '磁性アタッチメント', image: 'icon-6-denture.svg', sub: false},
+              {id: 5, menu: 4, cat: 4, label: '軟性裏装', image: 'icon-6-denture.svg', sub: false}
+            ],
+            sub5_1: [
+              {id: 1, menu: 5, cat: 1, label: 'ガム回復模型', image: 'icon-2-crown.svg'},
+              {id: 2, menu: 5, cat: 1, label: 'インプラント⽤模型', image: 'icon-2-crown.svg'}
+            ],
+            sub5_2: [
+              {id: 1, menu: 5, cat: 2, label: 'サージカルガイド', image: 'icon-2-crown.svg'},
+              {id: 2, menu: 5, cat: 2, label: '診断⽤ステント', image: 'icon-2-crown.svg'}
+            ],
+            sub5_3: [
+              {id: 1, menu: 5, cat: 3, label: 'メタルカスタムアバットメント', image: 'icon-2-crown.svg'},
+              {id: 2, menu: 5, cat: 3, label: 'ジルコニアカスタムアバットメント', image: 'icon-2-crown.svg'},
+              {id: 3, menu: 5, cat: 3, label: 'チタンカスタムアバットメント', image: 'icon-2-crown.svg'},
+              {id: 4, menu: 5, cat: 3, label: '既成アバットメント調整', image: 'icon-2-crown.svg'},
+              {id: 5, menu: 5, cat: 3, label: 'プロファイルアバットメント加⼯', image: 'icon-2-crown.svg'}
+            ],
+            sub5_4: [
+              {id: 1, menu: 5, cat: 4, label: 'プロビジョナルレストレーション', image: 'icon-2-crown.svg'},
+              {id: 2, menu: 5, cat: 4, label: 'ジルコニアセラミック', image: 'icon-2-crown.svg'},
+              {id: 3, menu: 5, cat: 4, label: 'フルジルコニア', image: 'icon-2-crown.svg'},
+              {id: 4, menu: 5, cat: 4, label: 'メタルボンド', image: 'icon-2-crown.svg'},
+              {id: 5, menu: 5, cat: 4, label: 'emax', image: 'icon-2-crown.svg'},
+              {id: 6, menu: 5, cat: 4, label: 'ハイブリッド', image: 'icon-2-crown.svg'},
+              {id: 7, menu: 5, cat: 4, label: '貴⾦属', image: 'icon-2-crown.svg'},
+              {id: 8, menu: 5, cat: 4, label: '硬質レジン', image: 'icon-2-crown.svg'}
+            ],
+            sub5_5: [
+              {id: 1, menu: 5, cat: 5, label: 'プロビジョナルレストレーション', image: 'icon-2-crown.svg'},
+              {id: 2, menu: 5, cat: 5, label: 'ジルコニアセラミック', image: 'icon-2-crown.svg'},
+              {id: 3, menu: 5, cat: 5, label: 'フルジルコニア', image: 'icon-2-crown.svg'},
+              {id: 4, menu: 5, cat: 5, label: 'メタルボンド', image: 'icon-2-crown.svg'},
+              {id: 5, menu: 5, cat: 5, label: 'emax', image: 'icon-2-crown.svg'},
+              {id: 6, menu: 5, cat: 5, label: 'ハイブリッド', image: 'icon-2-crown.svg'},
+              {id: 7, menu: 5, cat: 5, label: '貴⾦属', image: 'icon-2-crown.svg'},
+              {id: 8, menu: 5, cat: 5, label: '硬質レジン', image: 'icon-2-crown.svg'}
+            ],
+            sub6_1: [
+              {id: 1, menu: 6, cat: 1, label: 'ナイトガードソフト', image: 'icon-8.svg'},
+              {id: 2, menu: 6, cat: 1, label: 'スポーツスプリント', image: 'icon-8.svg'},
+              {id: 3, menu: 6, cat: 1, label: 'ホワイトニングトレー', image: 'icon-8.svg'}
+            ],
+            sub6_2: [
+              {id: 1, menu: 6, cat: 2, label: 'ナイトガードハード', image: 'icon-8.svg'},
+              {id: 2, menu: 6, cat: 2, label: 'プロテクションスプリント', image: 'icon-8.svg'},
+              {id: 3, menu: 6, cat: 2, label: 'スリープスプリント', image: 'icon-8.svg'},
+              {id: 4, menu: 6, cat: 2, label: 'スタビライゼーション型スプリント', image: 'icon-8.svg'}
+            ],
+            sub7_1: [
+              {id: 1, menu: 7, cat: 1, label: 'メタルブラケット', image: 'icon-5-grasp.svg'},
+              {id: 2, menu: 7, cat: 1, label: 'セラミックブラケット', image: 'icon-5-grasp.svg'},
+              {id: 3, menu: 7, cat: 1, label: 'クリアブラケット', image: 'icon-5-grasp.svg'},
+              {id: 4, menu: 7, cat: 1, label: 'リンガルブラケット', image: 'icon-5-grasp.svg'}
+            ],
+            sub7_2: [
+              {id: 1, menu: 7, cat: 2, label: 'インビザライン', image: 'icon-8.svg'},
+              {id: 2, menu: 7, cat: 2, label: 'アソアライナー', image: 'icon-8.svg'}
+            ],
+            sub7_3: [
+              {id: 1, menu: 7, cat: 3, label: 'ベッグタイプリテーナー', image: 'icon-5-grasp.svg'},
+              {id: 2, menu: 7, cat: 3, label: 'ホーレータイプリテーナー', image: 'icon-5-grasp.svg'},
+              {id: 3, menu: 7, cat: 3, label: 'クリアリテーナー', image: 'icon-5-grasp.svg'},
+              {id: 4, menu: 7, cat: 3, label: 'フィックスタイプリテーナー', image: 'icon-5-grasp.svg'}
+            ],
+            sub8_2: [
+              {id: 1, menu: 8, cat: 2, label: 'バンドループ', image: 'icon-2-crown.svg'},
+              {id: 2, menu: 8, cat: 2, label: 'ディスタルシュー', image: 'icon-2-crown.svg'},
+              {id: 3, menu: 8, cat: 2, label: 'リンガルアーチ', image: 'icon-2-crown.svg'},
+              {id: 4, menu: 8, cat: 2, label: '可撤式床装置', image: 'icon-2-crown.svg'},
+              {id: 5, menu: 8, cat: 2, label: 'ペドパーシャル', image: 'icon-2-crown.svg'}
+            ],
+            sub3_1_2: [
+              {id: 1, menu: 3, cat: 1, sub: 2, label: 'ロー提', image: 'icon-8.svg'},
+              {id: 2, menu: 3, cat: 1, sub: 2, label: 'ロー提＋排列試適', image: 'icon-6-denture.svg'}
+            ],
+            sub3_1_4: [
+              {id: 1, menu: 3, cat: 1, sub: 4, label: '排列試適済の完成', image: 'icon-6-denture.svg'},
+              {id: 2, menu: 3, cat: 1, sub: 4, label: '１回完成', image: 'icon-6-denture.svg'}
+            ],
+            sub3_2_2: [
+              {id: 1, menu: 3, cat: 2, sub: 2, label: 'ロー提', image: 'icon-8.svg'},
+              {id: 2, menu: 3, cat: 2, sub: 2, label: 'ロー提+排列試適', image: 'icon-5-grasp.svg'},
+              {id: 3, menu: 3, cat: 2, sub: 2, label: 'ロー提+維持装置', image: 'icon-9.svg'},
+              {id: 4, menu: 3, cat: 2, sub: 2, label: 'ロー提+維持装置+排列試適', image: 'icon-5-grasp.svg'}
+            ],
+            sub3_2_3: [
+              {id: 1, menu: 3, cat: 2, sub: 3, label: '維持装置+排列試適', image: 'icon-5-grasp.svg'},
+              {id: 2, menu: 3, cat: 2, sub: 3, label: '排列試適', image: 'icon-5-grasp.svg'}
+            ],
+            sub3_2_4: [
+              {id: 1, menu: 3, cat: 2, sub: 4, label: '排列試適済の完成', image: 'icon-5-grasp.svg'},
+              {id: 2, menu: 3, cat: 2, sub: 4, label: '一回完成', image: 'icon-5-grasp.svg'}
+            ],
+            sub3_3_1: [
+              {id: 1, menu: 3, cat: 3, sub: 1, label: 'レスト', image: ''},
+              {id: 2, menu: 3, cat: 3, sub: 1, label: 'エーカース', image: ''},
+              {id: 3, menu: 3, cat: 3, sub: 1, label: 'フック', image: ''},
+              {id: 4, menu: 3, cat: 3, sub: 1, label: 'スパー', image: ''},
+              {id: 5, menu: 3, cat: 3, sub: 1, label: 'ワイヤークラスプ', image: ''},
+              {id: 6, menu: 3, cat: 3, sub: 1, label: 'ワイヤー双子鉤', image: ''}
+            ],
+            sub3_3_2: [
+              {id: 1, menu: 3, cat: 3, sub: 2, label: '鋳造バー', image: ''},
+              {id: 2, menu: 3, cat: 3, sub: 2, label: 'レスト', image: ''},
+              {id: 3, menu: 3, cat: 3, sub: 2, label: 'フック', image: ''},
+              {id: 4, menu: 3, cat: 3, sub: 2, label: 'スパー', image: ''},
+              {id: 5, menu: 3, cat: 3, sub: 2, label: '鋳造リング鉤', image: ''},
+              {id: 6, menu: 3, cat: 3, sub: 2, label: '鋳造延⻑腕鉤', image: ''},
+              {id: 7, menu: 3, cat: 3, sub: 2, label: '鋳造単純鉤', image: ''},
+              {id: 8, menu: 3, cat: 3, sub: 2, label: '鋳造双⼦鉤', image: ''},
+              {id: 9, menu: 3, cat: 3, sub: 2, label: '鋳造両翼鉤', image: ''},
+              {id: 10, menu: 3, cat: 3, sub: 2, label: 'ワンピースバー', image: ''}
+            ],
+            sub4_1_2: [
+              {id: 1, menu: 4, cat: 1, sub: 2, label: 'ロー提', image: 'icon-8.svg'},
+              {id: 2, menu: 4, cat: 1, sub: 2, label: 'ロー提＋メタルフレーム', image: 'icon-6-denture.svg'}
+            ],
+            sub4_1_3: [
+              {id: 1, menu: 4, cat: 1, sub: 3, label: '金属床+排列試適', image: 'icon-6-denture.svg'},
+              {id: 2, menu: 4, cat: 1, sub: 3, label: '排列試適', image: 'icon-6-denture.svg'}
+            ],
+            sub4_1_4: [
+              {id: 1, menu: 4, cat: 1, sub: 4, label: '排列試適済の完成', image: 'icon-6-denture.svg'},
+              {id: 2, menu: 4, cat: 1, sub: 4, label: '１回完成', image: 'icon-6-denture.svg'}
+            ],
+            sub4_2_2: [
+              {id: 1, menu: 4, cat: 2, sub: 2, label: 'ロー提', image: 'icon-8.svg'},
+              {id: 2, menu: 4, cat: 2, sub: 2, label: 'ロー提+排列試適', image: 'icon-6-denture.svg'},
+              {id: 3, menu: 4, cat: 2, sub: 2, label: 'ロー提+維持装置', image: 'icon-6-denture.svg'},
+              {id: 4, menu: 4, cat: 2, sub: 2, label: 'ロー提+維持装置+排列試適', image: 'icon-6-denture.svg'}
+            ],
+            sub4_2_3: [
+              {id: 1, menu: 4, cat: 2, sub: 3, label: '金属床+排列試適', image: 'icon-6-denture.svg'},
+              {id: 2, menu: 4, cat: 2, sub: 3, label: '排列試適', image: 'icon-6-denture.svg'}
+            ],
+            sub4_2_4: [
+              {id: 1, menu: 4, cat: 2, sub: 4, label: '排列試適済の完成', image: 'icon-6-denture.svg'},
+              {id: 2, menu: 4, cat: 2, sub: 4, label: '１回完成', image: 'icon-6-denture.svg'}
+            ],
+            sub4_4_2: [
+              {id: 1, menu: 4, cat: 4, sub: 2, label: 'クラウンタイプ', image: 'icon-6-denture.svg'},
+              {id: 2, menu: 4, cat: 4, sub: 2, label: '前装タイプ(硬質レジン)', image: 'icon-6-denture.svg'},
+              {id: 3, menu: 4, cat: 4, sub: 2, label: '前装タイプ(ハイブリッド)', image: 'icon-6-denture.svg'}
+            ]
+          }
+        },
+        methods: {
+          selectMenu(id) {
+            this.selectedMenu = id
+            this.selectedCategory = 0
+            this.subLabel = false
+          },
+          menuClass(id) {
+            var mclass = []
+            if (id == 1) {
+              if (this.selectedMenu == 1) {
+                mclass.push('tab1-s')
+              } 
+              mclass.push('tab1')
+            } else if (id == 2) {
+              if (this.selectedMenu == 2) {
+                mclass.push('tab2-s')
+              } 
+              mclass.push('tab2')
+            } else if (id == 3) {
+              if (this.selectedMenu == 3) {
+                mclass.push('tab3-s')
+              } 
+              mclass.push('tab3')
+            } else if (id == 4) {
+              if (this.selectedMenu == 4) {
+                mclass.push('tab4-s')
+              } 
+              mclass.push('tab4')
+            } else if (id == 5) {
+              if (this.selectedMenu == 5) {
+                mclass.push('tab5-s')
+              } 
+              mclass.push('tab5')
+            } else if (id == 6) {
+              if (this.selectedMenu == 6) {
+                mclass.push('tab6-s')
+              } 
+              mclass.push('tab6')
+            } else if (id == 7) {
+              if (this.selectedMenu == 7) {
+                mclass.push('tab7-s')
+              } 
+              mclass.push('tab7')
+            } else if (id == 8) {
+              if (this.selectedMenu == 8) {
+                mclass.push('tab8-s')
+              } 
+              mclass.push('tab8')
+            }
+            return mclass
+          },
+          menuLineClass () {
+            var lclass = []
+            if (this.selectedMenu == 1) {
+              lclass.push('tabs-1')
+            } else if (this.selectedMenu == 2) {
+              lclass.push('tabs-2')
+            } else if (this.selectedMenu == 3) {
+              lclass.push('tabs-3')
+            } else if (this.selectedMenu == 4) {
+              lclass.push('tabs-4')
+            } else if (this.selectedMenu == 5) {
+              lclass.push('tabs-5')
+            } else if (this.selectedMenu == 6) {
+              lclass.push('tabs-6')
+            } else if (this.selectedMenu == 7) {
+              lclass.push('tabs-7')
+            } else if (this.selectedMenu == 8) {
+              lclass.push('tabs-8')
+            }
+            return lclass
+          },
+          selectCategory(id) {
+            this.selectedCategory = id
+            this.selectedSub = 0
+            this.subLabel = false
+          },
+          selectCategory2(id,label) {
+            this.selectedSub = id
+            this.selectedSub2 = 0
+            this.subLabel = false
+            if (this.selectedItems.includes(label)) {
+              this.selectedItems = this.selectedItems.filter(function(value, index, selectedItems){ return value !== label})
+            } else {
+              this.selectedItems.push(label)
+            }
+          },
+          selectCategorySub(id,label,sub) {
+            if (sub == true) {
+              this.selectedSub = id
+              this.subLabel = true
+              this.selectedSub2 = 0
+            } else {
+              this.selectedSub = id
+              this.subLabel = false
+              this.selectedSub2 = 0
+              if (this.selectedItems.includes(label)) {
+                this.selectedItems = this.selectedItems.filter(function(value, index, selectedItems){ return value !== label})
+              } else {
+                this.selectedItems.push(label)
+              }
+            }
+          },
+          selectCategory3(id,label) {
+            this.selectedSub2 = id
+            if (this.selectedItems.includes(label)) {
+              this.selectedItems = this.selectedItems.filter(function(value, index, selectedItems){ return value !== label})
+            } else {
+              this.selectedItems.push(label)
+            }
+          }
+        }
+      })
+    </script>
+   <ons-toolbar>
+    <div class="left">
+      <ons-back-button onclick="resetHome()">ホーム</ons-back-button>
+    </div>
+    <div class="center">納期確認 – 技工物選択</div>
+    <div class="right"></div>
+  </ons-toolbar>
+  <div id="app-cal" class="del-calendar">
+    <div class="flex-70-dc2">
+      <div class="dc-tabs" :class="menuLineClass()">
+        <div
+        class="dc-tab" 
+        :class="menuClass(item.id)"
+        v-for="item in menu" 
+        :key="item.id" 
+        @click="selectMenu(item.id)">
+        {{ item.label }}
+        </div>
+      </div>
+        <!-- レベル2メニュー -->
+      <div class="dc-category" v-if="selectedMenu > 0 && selectedMenu != 4">カテゴリ</div>
+      <div class="dc-category" v-if="selectedMenu > 0 && selectedMenu == 4">技工物種別</div>
+      <div class="dc-letters">
+       <div
+          v-if="selectedMenu == 1"
+          class="dc-button2" 
+          v-for="item in categories1" 
+          :key="item.id" 
+          :class="{ blue : selectedCategory == item.id }" 
+          @click="selectCategory(item.id)">
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 2"
+          class="dc-button2" 
+          v-for="item in categories2" 
+          :key="item.id" 
+          :class="{ blue : selectedCategory == item.id }" 
+          @click="selectCategory(item.id)">
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 3"
+          class="dc-button2" 
+          v-for="item in categories3" 
+          :key="item.id" 
+          :class="{ blue : selectedCategory == item.id }" 
+          @click="selectCategory(item.id)">
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 4"
+          class="dc-button2" 
+          v-for="item in categories4" 
+          :key="item.id" 
+          :class="{ blue : selectedCategory == item.id }" 
+          @click="selectCategory(item.id)">
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 5"
+          class="dc-button2" 
+          v-for="item in categories5" 
+          :key="item.id" 
+          :class="{ blue : selectedCategory == item.id }" 
+          @click="selectCategory(item.id)">
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 6"
+          class="dc-button2" 
+          v-for="item in categories6" 
+          :key="item.id" 
+          :class="{ blue : selectedCategory == item.id }" 
+          @click="selectCategory(item.id)">
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 7"
+          class="dc-button2" 
+          v-for="item in categories7" 
+          :key="item.id" 
+          :class="{ blue : selectedCategory == item.id }" 
+          @click="selectCategory(item.id)">
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 8"
+          class="dc-button2" 
+          v-for="item in categories8" 
+          :key="item.id" 
+          :class="{ blue : selectedCategory == item.id }" 
+          @click="selectCategory(item.id)">
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+      </div>
+      <!-- レベル2メニュー END -->
+      <!-- レベル3メニュー -->
+      <div class="dc-category" v-if="selectedCategory > 0 && selectedMenu != 4 && selectedMenu != 3">技工物</div>
+      <div class="dc-category" v-if="selectedCategory > 0 && selectedMenu == 4 || selectedCategory > 0 && selectedMenu == 3">工程</div>
+      <div class="dc-letters">
+      <div
+          v-if="selectedMenu == 1 && selectedCategory == 1"
+          class="dc-button2" 
+          v-for="item in sub1_1" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 1 && selectedCategory == 2"
+          class="dc-button2" 
+          v-for="item in sub1_2" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 1 && selectedCategory == 3"
+          class="dc-button2" 
+          v-for="item in sub1_3" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 1 && selectedCategory == 4"
+          class="dc-button2" 
+          v-for="item in sub1_4" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 1 && selectedCategory == 5"
+          class="dc-button2" 
+          v-for="item in sub1_5" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 1 && selectedCategory == 6"
+          class="dc-button2" 
+          v-for="item in sub1_6" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 1 && selectedCategory == 7"
+          class="dc-button2" 
+          v-for="item in sub1_7" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 1 && selectedCategory == 8"
+          class="dc-button2" 
+          v-for="item in sub1_8" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 2 && selectedCategory == 1"
+          class="dc-button2" 
+          v-for="item in sub2_1" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 2 && selectedCategory == 2"
+          class="dc-button2" 
+          v-for="item in sub2_2" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 2 && selectedCategory == 3"
+          class="dc-button2" 
+          v-for="item in sub2_3" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 2 && selectedCategory == 4"
+          class="dc-button2" 
+          v-for="item in sub2_4" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 2 && selectedCategory == 5"
+          class="dc-button2" 
+          v-for="item in sub2_5" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 2 && selectedCategory == 6"
+          class="dc-button2" 
+          v-for="item in sub2_6" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 2 && selectedCategory == 7"
+          class="dc-button2" 
+          v-for="item in sub2_7" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 3 && selectedCategory == 1"
+          class="dc-button2" 
+          v-for="item in sub3_1" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategorySub(item.id,item.label,item.sub)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label) && item.sub == false">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 3 && selectedCategory == 2"
+          class="dc-button2" 
+          v-for="item in sub3_2" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategorySub(item.id,item.label,item.sub)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label) && item.sub == false">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 3 && selectedCategory == 3"
+          class="dc-button2" 
+          v-for="item in sub3_3" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategorySub(item.id,item.label,item.sub)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label) && item.sub == false">1</span>
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 4 && selectedCategory == 1"
+          class="dc-button2" 
+          v-for="item in sub4_1" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategorySub(item.id,item.label,item.sub)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label) && item.sub == false">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 4 && selectedCategory == 2"
+          class="dc-button2" 
+          v-for="item in sub4_2" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategorySub(item.id,item.label,item.sub)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label) && item.sub == false">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 4 && selectedCategory == 3"
+          class="dc-button2" 
+          v-for="item in sub4_3" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 4 && selectedCategory == 4"
+          class="dc-button2" 
+          v-for="item in sub4_4" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategorySub(item.id,item.label,item.sub)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label) && item.sub == false">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 5 && selectedCategory == 1"
+          class="dc-button2" 
+          v-for="item in sub5_1" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 5 && selectedCategory == 2"
+          class="dc-button2" 
+          v-for="item in sub5_2" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 5 && selectedCategory == 3"
+          class="dc-button2" 
+          v-for="item in sub5_3" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 5 && selectedCategory == 4"
+          class="dc-button2" 
+          v-for="item in sub5_4" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 5 && selectedCategory == 5"
+          class="dc-button2" 
+          v-for="item in sub5_5" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 6 && selectedCategory == 1"
+          class="dc-button2" 
+          v-for="item in sub6_1" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 6 && selectedCategory == 2"
+          class="dc-button2" 
+          v-for="item in sub6_2" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 7 && selectedCategory == 1"
+          class="dc-button2" 
+          v-for="item in sub7_1" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 7 && selectedCategory == 2"
+          class="dc-button2" 
+          v-for="item in sub7_2" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 7 && selectedCategory == 3"
+          class="dc-button2" 
+          v-for="item in sub7_3" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 8 && selectedCategory == 2"
+          class="dc-button2" 
+          v-for="item in sub8_2" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory2(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+      </div>
+    <!-- レベル3メニュー END -->
+    <!-- レベル4メニュー -->
+      <div class="dc-category" v-if="subLabel">技工物</div>
+      <div class="dc-letters">
+       <div
+          v-if="selectedMenu == 3 && selectedCategory == 1 && selectedSub == 2"
+          class="dc-button2" 
+          v-for="item in sub3_1_2" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory3(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 3 && selectedCategory == 1 && selectedSub == 4"
+          class="dc-button2" 
+          v-for="item in sub3_1_4" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory3(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 3 && selectedCategory == 2 && selectedSub == 2"
+          class="dc-button2" 
+          v-for="item in sub3_2_2" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory3(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 3 && selectedCategory == 2 && selectedSub == 3"
+          class="dc-button2" 
+          v-for="item in sub3_2_3" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory3(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 3 && selectedCategory == 2 && selectedSub == 4"
+          class="dc-button2" 
+          v-for="item in sub3_2_4" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory3(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 3 && selectedCategory == 3 && selectedSub == 1"
+          class="dc-button2" 
+          v-for="item in sub3_3_1" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory3(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 3 && selectedCategory == 3 && selectedSub == 2"
+          class="dc-button2" 
+          v-for="item in sub3_3_2" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory3(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 4 && selectedCategory == 1 && selectedSub == 2"
+          class="dc-button2" 
+          v-for="item in sub4_1_2" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory3(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 4 && selectedCategory == 1 && selectedSub == 3"
+          class="dc-button2" 
+          v-for="item in sub4_1_3" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory3(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 4 && selectedCategory == 1 && selectedSub == 4"
+          class="dc-button2" 
+          v-for="item in sub4_1_4" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory3(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 4 && selectedCategory == 2 && selectedSub == 2"
+          class="dc-button2" 
+          v-for="item in sub4_2_2" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory3(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 4 && selectedCategory == 2 && selectedSub == 3"
+          class="dc-button2" 
+          v-for="item in sub4_2_3" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory3(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 4 && selectedCategory == 2 && selectedSub == 4"
+          class="dc-button2" 
+          v-for="item in sub4_2_4" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory3(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+        <div
+          v-if="selectedMenu == 4 && selectedCategory == 4 && selectedSub == 2"
+          class="dc-button2" 
+          v-for="item in sub4_4_2" 
+          :key="item.id" 
+          :class="{ blue : selectedItems.includes(item.label) }" 
+          @click="selectCategory3(item.id,item.label)">
+          <div class="question" onclick="showPopover(this)">?</div>
+          <span class="notification" v-if="selectedItems.includes(item.label)">1</span>
+          <img :src="'img/' + item.image">
+          {{ item.label }}
+        </div>
+      </div>
+    <!-- レベル4メニュー END -->
+    </div>
+    <div class="flex-30-dc-n">
+      <div class="mlr-20">発注日（印象採得日)</div>
+      <ons-input type="date" class="date-in"></ons-input>
+      <div class="right-title">同一ケース内の技工物</div>
+      <div class="cart">
+        <div
+          class="cart-row" 
+          v-for="item in selectedItems"
+          :key="item" >
+          <div>{{ item }}</div>
+          <div class="input-row">
+            <number-input :value="0" size="small" min="1" inline center controls></number-input>
+            <img src="img/icon-delete.svg" onclick="createAlertDialog('dc-dialog')">
+          </div>
+        </div>
+      </div>
+      <ons-button class="right-button" v-bind:disabled="!selectedItems.length" onclick="resetPage('delivery-calendar-2.html')">納期を確認する</ons-button>
+    </div>
+  </div>
+  </ons-page>
+</template>
+<ons-popover direction="up" id="popover">
+  <div style="padding: 10px; text-align: center;" onclick="hidePopover()">
+    <p class="txt-sm">単純インレー</p>
+    <p class="txt-sm">メタルで製作した詰め物</p>
+    <p class="txt-sm">別称：インレー/In / MC / Inlay / MIn / CK</p>
+  </div>
+</ons-popover>
+<!-- 7-1.納期カレンダートップ画面  END-->
