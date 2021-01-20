@@ -1,0 +1,490 @@
+<!-- 6-1.ターミナル画面 – 医院一覧 -->
+<template id="terminal.html">
+  <ons-page id="app1">
+    <script>
+      new Vue({
+        el: '#app1',
+        data() {
+          return {
+            filteredDisplay: false,
+            selected_l: [],
+            selected_f: 0,
+            filtered: [],
+            itemsPerPage: 0,
+            screenCount: 1,
+            buttons: [
+              { id: 1, label: 120 },
+              { id: 2, label: 64 },
+              { id: 3, label: 30 }
+            ],
+            letters: [
+              {id: 13, label: '全て'},
+              {id: 1, label: 'Aコース'},
+              {id: 2, label: 'Bコース'},
+              {id: 3, label: 'Cコース'},
+              {id: 4, label: 'Dコース'},
+              {id: 5, label: 'Eコース'},
+              {id: 6, label: 'Fコース'},
+              {id: 7, label: 'Gコース'},
+              {id: 8, label: 'Hコース'},
+              {id: 9, label: '東京'},
+              {id: 10, label: '別便'},
+              {id: 11, label: '営業担当'},
+              {id: 12, label: 'グループなし'}
+            ],
+            clinics: [
+              {id: 1, category: 1, days: 4, notif_count: 1, collection: 1, label: 'みなみだ歯科クリニック'},
+              {id: 2, category: 1, days: 1, notif_count: 0, label: '五十嵐歯科医院'},
+              {id: 3, category: 1, days: 4, notif_count: 1, label: 'りんご歯科クリニック'},
+              {id: 4, category: 1, days: 2, notif_count: 2, today: 1, label: '狩野歯科医院'},
+              {id: 5, category: 1, days: 5, notif_count: 0, label: 'エビナ歯科医院'},
+              {id: 6, category: 1, days: 4, notif_count: 0, label: '荒川歯科医院'},
+              {id: 7, category: 1, days: 4, notif_count: 3, label: '佐々木歯科医院'},
+              {id: 8, category: 1, days: 1, notif_count: 5, label: 'トチヤ歯科医院'},
+              {id: 9, category: 1, days: 5, notif_count: 2, collection: 1, label: ' 関口歯科医院'},
+              {id: 10, category: 1, days: 4, notif_count: 0, collection: 1, label: 'よこすか歯科医院'},
+              {id: 11, category: 1, days: 1, notif_count: 1, label: '西原歯科医院'},
+              {id: 12, category: 1, days: 4, notif_count: 0, label: 'プラザデンタルクリニック'},
+              {id: 13, category: 1, days: 3, notif_count: 0, collection: 1, label: '湘南歯科クリニック'},
+              {id: 14, category: 1, days: 5, notif_count: 1, label: '白水歯科医院'},
+              {id: 15, category: 1, days: 4, notif_count: 1, label: '岡本歯科医院'},
+              {id: 16, category: 1, days: 4, notif_count: 2, label: '鎌倉医院'},
+              {id: 17, category: 1, days: 8, notif_count: 0, label: '藤田歯科医院'},
+              {id: 18, category: 1, days: 4, notif_count: 0, label: '岡村歯科医院'},
+              {id: 19, category: 1, days: 7, notif_count: 7, label: ' おかむら歯科矯正'},
+              {id: 20, category: 1, days: 4, notif_count: 3, collection: 1, label: '岡村デンタルクリニック'},
+              {id: 21, category: 1, days: 3, notif_count: 2, collection: 1, label: '小林歯科クリニック'},
+              {id: 22, category: 1, days: 4, notif_count: 0, label: 'はま歯科医院'},
+              {id: 23, category: 1, days: 4, notif_count: 0, label: '高階歯科医院'},
+              {id: 24, category: 1, days: 4, notif_count: 5, today: 1, label: '土屋歯科医院'},
+              {id: 25, category: 1, days: 1, notif_count: 2, label: '永田歯科医院'},
+              {id: 26, category: 1, days: 4, notif_count: 0, label: '橋本歯科'},
+              {id: 27, category: 1, days: 4, notif_count: 0, collection: 1, label: '大野歯科医院'},
+              {id: 28, category: 1, days: 4, notif_count: 0, label: '若葉台歯科医院'},
+              {id: 29, category: 1, days: 4, notif_count: 0, label: '永田歯科'},
+              {id: 30, category: 1, days: 5, notif_count: 4, label: '小林歯科医院'},
+              {id: 31, category: 1, days: 4, notif_count: 0, label: 'ひかり歯科クリニック'},
+              {id: 32, category: 1, days: 4, notif_count: 0, label: '希望が丘歯科診療所'},
+              {id: 33, category: 1, days: 2, notif_count: 0, label: 'サン歯科医院'},
+              {id: 34, category: 1, days: 4, notif_count: 0, collection: 1, label: '若葉歯科'},
+              {id: 35, category: 1, days: 4, notif_count: 5, label: '希望ヶ丘デンタル'},
+              {id: 36, category: 1, days: 4, notif_count: 2, label: 'しもぬる歯科クリニック'},
+              {id: 37, category: 1, days: 4, notif_count: 0, label: 'こいけ歯科'},
+              {id: 38, category: 1, days: 6, notif_count: 2, today: 1, label: '瀬戸デンタルクリニック'},
+              {id: 39, category: 1, days: 4, notif_count: 2, label: '根本歯科医院'},
+              {id: 40, category: 1, days: 4, notif_count: 3, label: 'たどころ歯科医院'},
+              {id: 41, category: 2, days: 4, notif_count: 0, label: 'みなみだ歯科クリニック'},
+              {id: 42, category: 2, days: 4, notif_count: 0, label: '五十嵐歯科医院'},
+              {id: 43, category: 2, days: 7, notif_count: 2, label: 'りんご歯科クリニック'},
+              {id: 44, category: 2, days: 4, notif_count: 2, collection: 1, label: '狩野歯科医院'},
+              {id: 45, category: 2, days: 4, notif_count: 0, collection: 1, label: 'エビナ歯科医院'},
+              {id: 46, category: 2, days: 4, notif_count: 0, label: '荒川歯科医院'},
+              {id: 47, category: 2, days: 4, notif_count: 2, label: '佐々木歯科医院'},
+              {id: 48, category: 2, days: 4, notif_count: 1, label: 'トチヤ歯科医院'},
+              {id: 49, category: 2, days: 1, notif_count: 2, label: ' 関口歯科医院'},
+              {id: 50, category: 2, days: 4, notif_count: 0, label: 'よこすか歯科医院'},
+              {id: 51, category: 2, days: 4, notif_count: 0, label: '西原歯科医院'},
+              {id: 52, category: 2, days: 4, notif_count: 0, label: 'プラザデンタルクリニック'},
+              {id: 53, category: 2, days: 4, notif_count: 1, today: 1, label: '湘南歯科クリニック'},
+              {id: 54, category: 2, days: 1, notif_count: 2, label: '白水歯科医院'},
+              {id: 55, category: 2, days: 4, notif_count: 5, label: '岡本歯科医院'},
+              {id: 56, category: 2, days: 4, notif_count: 2, label: '鎌倉医院'},
+              {id: 57, category: 2, days: 4, notif_count: 0, collection: 1, label: '藤田歯科医院'},
+              {id: 58, category: 2, days: 4, notif_count: 0, label: '岡村歯科医院'},
+              {id: 59, category: 2, days: 4, notif_count: 2, label: ' おかむら歯科矯正'},
+              {id: 60, category: 2, days: 4, notif_count: 1, label: '岡村デンタルクリニック'},
+              {id: 61, category: 2, days: 4, notif_count: 3, label: '小林歯科クリニック'},
+              {id: 62, category: 2, days: 5, notif_count: 0, label: 'はま歯科医院'},
+              {id: 63, category: 2, days: 4, notif_count: 0, label: '高階歯科医院'},
+              {id: 64, category: 2, days: 4, notif_count: 0, collection: 1, label: '土屋歯科医院'},
+              {id: 65, category: 2, days: 4, notif_count: 2, collection: 1, label: '永田歯科医院'},
+              {id: 66, category: 2, days: 4, notif_count: 0, label: '橋本歯科'},
+              {id: 67, category: 2, days: 4, notif_count: 0, label: '大野歯科医院'},
+              {id: 68, category: 2, days: 4, notif_count: 0, label: '若葉台歯科医院'},
+              {id: 69, category: 2, days: 9, notif_count: 0, label: '永田歯科'},
+              {id: 70, category: 2, days: 4, notif_count: 7, label: '小林歯科医院'},
+              {id: 71, category: 2, days: 4, notif_count: 0, label: 'ひかり歯科クリニック'},
+              {id: 72, category: 2, days: 4, notif_count: 4, today: 1, label: '希望が丘歯科診療所'},
+              {id: 73, category: 2, days: 4, notif_count: 0, label: 'サン歯科医院'},
+              {id: 74, category: 2, days: 1, notif_count: 0, label: '若葉歯科'},
+              {id: 75, category: 2, days: 4, notif_count: 2, collection: 1, label: '希望ヶ丘デンタル'},
+              {id: 76, category: 2, days: 4, notif_count: 8, label: 'しもぬる歯科クリニック'},
+              {id: 77, category: 2, days: 4, notif_count: 0, label: 'こいけ歯科'},
+              {id: 78, category: 2, days: 4, notif_count: 2, label: '瀬戸デンタルクリニック'},
+              {id: 79, category: 2, days: 4, notif_count: 1, label: '根本歯科医院'},
+              {id: 80, category: 2, days: 4, notif_count: 2, label: 'たどころ歯科医院'},
+              {id: 81, category: 3, days: 4, notif_count: 0, label: 'みなみだ歯科クリニック'},
+              {id: 82, category: 3, days: 4, notif_count: 0, label: '五十嵐歯科医院'},
+              {id: 83, category: 3, days: 1, notif_count: 2, label: 'りんご歯科クリニック'},
+              {id: 84, category: 3, days: 4, notif_count: 3, collection: 1, today: 1, label: '狩野歯科医院'},
+              {id: 85, category: 3, days: 4, notif_count: 0, collection: 1, label: 'エビナ歯科医院'},
+              {id: 86, category: 3, days: 4, notif_count: 0, collection: 1, label: '荒川歯科医院'},
+              {id: 87, category: 3, days: 4, notif_count: 2, label: '佐々木歯科医院'},
+              {id: 88, category: 3, days: 4, notif_count: 5, label: 'トチヤ歯科医院'},
+              {id: 89, category: 3, days: 4, notif_count: 6, label: ' 関口歯科医院'},
+              {id: 90, category: 3, days: 4, notif_count: 0, label: 'よこすか歯科医院'},
+              {id: 91, category: 3, days: 5, notif_count: 0, label: '西原歯科医院'},
+              {id: 92, category: 3, days: 4, notif_count: 0, label: 'プラザデンタルクリニック'},
+              {id: 93, category: 3, days: 4, notif_count: 0, label: '湘南歯科クリニック'},
+              {id: 94, category: 3, days: 4, notif_count: 2, label: '白水歯科医院'},
+              {id: 95, category: 3, days: 4, notif_count: 1, label: '岡本歯科医院'},
+              {id: 96, category: 3, days: 7, notif_count: 9, today: 1, label: '鎌倉医院'},
+              {id: 97, category: 3, days: 4, notif_count: 0, label: '藤田歯科医院'},
+              {id: 98, category: 3, days: 4, notif_count: 0, label: '岡村歯科医院'},
+              {id: 99, category: 3, days: 4, notif_count: 2, label: ' おかむら歯科矯正'},
+              {id: 100, category: 3, days: 4, notif_count: 2, collection: 1, label: '岡村デンタルクリニック'},
+              {id: 101, category: 3, days: 4, notif_count: 3, label: '小林歯科クリニック'},
+              {id: 102, category: 3, days: 4, notif_count: 0, label: 'はま歯科医院'},
+              {id: 103, category: 3, days: 4, notif_count: 0, label: '高階歯科医院'},
+              {id: 104, category: 3, days: 1, notif_count: 0, label: '土屋歯科医院'},
+              {id: 105, category: 3, days: 4, notif_count: 4, label: '永田歯科医院'},
+              {id: 106, category: 3, days: 4, notif_count: 0, label: '橋本歯科'},
+              {id: 107, category: 3, days: 4, notif_count: 0, label: '大野歯科医院'},
+              {id: 108, category: 3, days: 4, notif_count: 0, label: '若葉台歯科医院'},
+              {id: 109, category: 3, days: 8, notif_count: 0, label: '永田歯科'},
+              {id: 110, category: 3, days: 4, notif_count: 2, collection: 1, label: '小林歯科医院'},
+              {id: 111, category: 3, days: 4, notif_count: 0, label: 'ひかり歯科クリニック'},
+              {id: 112, category: 3, days: 4, notif_count: 0, label: '希望が丘歯科診療所'},
+              {id: 113, category: 3, days: 4, notif_count: 0, label: 'サン歯科医院'},
+              {id: 114, category: 3, days: 4, notif_count: 0, today: 1, label: '若葉歯科'},
+              {id: 115, category: 3, days: 4, notif_count: 5, label: '希望ヶ丘デンタル'},
+              {id: 116, category: 3, days: 4, notif_count: 2, collection: 1, label: 'しもぬる歯科クリニック'},
+              {id: 117, category: 3, days: 4, notif_count: 0, collection: 1, label: 'こいけ歯科'},
+              {id: 118, category: 3, days: 9, notif_count: 2, label: '瀬戸デンタルクリニック'},
+              {id: 119, category: 3, days: 4, notif_count: 2, label: '根本歯科医院'},
+              {id: 120, category: 3, days: 4, notif_count: 7, label: 'たどころ歯科医院'},
+              {id: 121, category: 4, days: 4, notif_count: 2, label: '小林歯科クリニック'},
+              {id: 122, category: 4, days: 4, notif_count: 0, label: 'はま歯科医院'},
+              {id: 123, category: 4, days: 4, notif_count: 0, label: '高階歯科医院'},
+              {id: 124, category: 4, days: 3, notif_count: 0, label: '土屋歯科医院'},
+              {id: 125, category: 4, days: 3, notif_count: 1, label: '永田歯科医院'},
+              {id: 126, category: 4, days: 4, notif_count: 1, label: '橋本歯科'},
+              {id: 127, category: 4, days: 4, notif_count: 0, label: '大野歯科医院'},
+              {id: 128, category: 4, days: 4, notif_count: 0, label: '若葉台歯科医院'},
+              {id: 129, category: 4, days: 4, notif_count: 0, collection: 1, label: '永田歯科'},
+              {id: 130, category: 4, days: 4, notif_count: 2, collection: 1, label: '小林歯科医院'},
+              {id: 131, category: 4, days: 4, notif_count: 0, label: 'ひかり歯科クリニック'},
+              {id: 132, category: 4, days: 4, notif_count: 0, label: '希望が丘歯科診療所'},
+              {id: 133, category: 4, days: 4, notif_count: 0, label: 'サン歯科医院'},
+              {id: 134, category: 4, days: 4, notif_count: 0, label: '若葉歯科'},
+              {id: 135, category: 4, days: 4, notif_count: 4, today: 1, label: '希望ヶ丘デンタル'},
+              {id: 136, category: 4, days: 4, notif_count: 2, label: 'しもぬる歯科クリニック'},
+              {id: 137, category: 4, days: 4, notif_count: 0, label: 'こいけ歯科'},
+              {id: 138, category: 4, days: 2, notif_count: 2, label: '瀬戸デンタルクリニック'},
+              {id: 139, category: 4, days: 4, notif_count: 3, label: '根本歯科医院'},
+              {id: 140, category: 4, days: 4, notif_count: 1, label: 'たどころ歯科医院'},
+              {id: 141, category: 4, days: 4, notif_count: 2, label: '小林歯科クリニック'},
+              {id: 142, category: 4, days: 4, notif_count: 0, label: 'はま歯科医院'},
+              {id: 143, category: 4, days: 4, notif_count: 1, today: 1, label: '高階歯科医院'},
+              {id: 144, category: 4, days: 8, notif_count: 0, label: '土屋歯科医院'},
+              {id: 145, category: 4, days: 4, notif_count: 5, label: '永田歯科医院'},
+              {id: 146, category: 4, days: 4, notif_count: 0, label: '橋本歯科'},
+              {id: 147, category: 4, days: 4, notif_count: 0, label: '大野歯科医院'},
+              {id: 148, category: 4, days: 4, notif_count: 0, collection: 1, label: '若葉台歯科医院'},
+              {id: 149, category: 4, days: 4, notif_count: 8, label: '永田歯科'},
+              {id: 150, category: 4, days: 4, notif_count: 2, label: '小林歯科医院'},
+              {id: 151, category: 4, days: 2, notif_count: 0, label: 'ひかり歯科クリニック'},
+              {id: 152, category: 4, days: 4, notif_count: 0, label: '希望が丘歯科診療所'},
+              {id: 153, category: 4, days: 4, notif_count: 1, label: 'サン歯科医院'},
+              {id: 154, category: 4, days: 4, notif_count: 0, label: '若葉歯科'},
+              {id: 155, category: 4, days: 7, notif_count: 3, collection: 1, today: 1, label: '希望ヶ丘デンタル'},
+              {id: 156, category: 4, days: 4, notif_count: 2, label: 'しもぬる歯科クリニック'},
+              {id: 157, category: 4, days: 4, notif_count: 0, label: 'こいけ歯科'},
+              {id: 158, category: 4, days: 4, notif_count: 2, label: '瀬戸デンタルクリニック'},
+              {id: 159, category: 4, days: 4, notif_count: 5, collection: 1, label: '根本歯科医院'},
+              {id: 160, category: 4, days: 4, notif_count: 2, label: 'たどころ歯科医院'}
+            ]
+          }
+        },
+        methods: {
+          filter (label) {
+            if (this.selected_f == label) {
+              this.selected_f = 0
+            } else {
+              this.selected_f = label
+            }
+            this.view()
+            console.log(this.selected_f)
+          },
+          ltr (id) {
+            if (id !== 13 ) {
+              if (this.selected_l.includes(id)) {
+                index = this.selected_l.indexOf(id)
+                this.selected_l.splice(index, 1)
+              } else {
+                this.selected_l.push(id)
+              }
+            } else {
+                this.selected_l = [13]
+            }
+            this.view()
+            console.log(this.selected_l)
+          },
+          view () {
+            if (this.selected_f == 0 && this.selected_l.length) {
+              this.filtered = this.clinics.filter((el) => { return this.selected_l.includes(el.category) })
+              this.filteredDisplay = true
+              this.itemsPerPage = 40
+              this.screenCount = Math.ceil(this.filtered.length / this.itemsPerPage)
+            } else if (this.selected_f > 0 && this.selected_l.length) {
+              this.filtered = this.clinics.filter((el) => { return this.selected_l.includes(el.category) })
+              this.filteredDisplay = true
+              this.itemsPerPage = this.selected_f
+              this.screenCount = Math.ceil(this.filtered.length / this.selected_f)
+            } else if (this.selected_f > 0 && !this.selected_l.length) {
+              this.filteredDisplay = true
+              this.itemsPerPage = this.selected_f
+              this.screenCount = Math.ceil(this.filtered.length / this.selected_f)
+            } else {
+              this.filteredDisplay = false
+            }
+          },
+          letterClass (id) {
+            var lclass = []
+            if (id == 1) {
+              if (this.selected_l.includes(id)) {
+                lclass.push('cat1-s')
+              } lclass.push('cat1')
+            } else if (id == 2) {
+              if (this.selected_l.includes(id)) {
+                lclass.push('cat2-s')
+              } lclass.push('cat2')
+            } else if (id == 3) {
+              if (this.selected_l.includes(id)) {
+                lclass.push('cat3-s')
+              } lclass.push('cat3')
+            } else if (id == 4) {
+              if (this.selected_l.includes(id)) {
+                lclass.push('cat4-s')
+              } lclass.push('cat4')
+            } else if (id == 5) {
+              if (this.selected_l.includes(id)) {
+                lclass.push('cat5-s')
+              } lclass.push('cat5')
+            } else if (id == 6) {
+              if (this.selected_l.includes(id)) {
+                lclass.push('cat6-s')
+              } lclass.push('cat6')
+            } else if (id == 7) {
+              if (this.selected_l.includes(id)) {
+                lclass.push('cat7-s')
+              } lclass.push('cat7')
+            } else if (id == 8) {
+              if (this.selected_l.includes(id)) {
+                lclass.push('cat8-s')
+              } lclass.push('cat8')
+            } else if (id == 9) {
+              if (this.selected_l.includes(id)) {
+                lclass.push('cat9-s')
+              } lclass.push('cat9')
+            } else if (id == 10) {
+              if (this.selected_l.includes(id)) {
+                lclass.push('cat10-s')
+              } lclass.push('cat10')
+            } else if (id == 11) {
+              if (this.selected_l.includes(id)) {
+                lclass.push('cat11-s')
+              } lclass.push('cat11')
+            } else if (id == 12) {
+              if (this.selected_l.includes(id)) {
+                lclass.push('cat12-s')
+              } lclass.push('cat12')
+            } 
+            return lclass
+          },
+          conClass () {
+            var cclass = []
+            if (this.selected_f == 30) {
+              cclass.push('size30', 'noresize')
+            } else if (this.selected_f == 64) {
+              cclass.push('size64', 'noresize')
+            } else if (this.selected_f == 120) {
+              cclass.push('size120', 'noresize')
+            }
+            return cclass
+          },
+          blockClass (cat, notif, label, today) {
+            var bclass = []
+            if (cat == 1) {
+              if (notif > 0 && today !== 1) {
+                bclass.push('block1-s')
+              } else if (notif > 0 && today == 1) {
+                bclass.push('block-red')
+              } else {
+                bclass.push('block1')
+              }
+            } else if (cat == 2) {
+              if (notif > 0 && today !== 1) {
+                bclass.push('block2-s')
+              } else if (notif > 0 && today == 1) {
+                bclass.push('block-red')
+              } else {
+                bclass.push('block2')
+              }
+            } else if (cat == 3) {
+              if (notif > 0 && today !== 1) {
+                bclass.push('block3-s')
+              } else if (notif > 0 && today == 1) {
+                bclass.push('block-red')
+              } else {
+                bclass.push('block3')
+              }
+            } else if (cat == 4) {
+              if (notif > 0 && today !== 1) {
+                bclass.push('block4-s')
+              } else if (notif > 0 && today == 1) {
+                bclass.push('block-red')
+              } else {
+                bclass.push('block4')
+              }
+            } else if (cat == 5) {
+              if (notif > 0 && today !== 1) {
+                bclass.push('block5-s')
+              } else if (notif > 0 && today == 1) {
+                bclass.push('block-red')
+              } else {
+                bclass.push('block5')
+              }
+            } else if (cat == 6) {
+              if (notif > 0 && today !== 1) {
+                bclass.push('block6-s')
+              } else if (notif > 0 && today == 1) {
+                bclass.push('block-red')
+              } else {
+                bclass.push('block6')
+              }
+            } else if (cat == 7) {
+              if (notif > 0 && today !== 1) {
+                bclass.push('block7-s')
+              } else if (notif > 0 && today == 1) {
+                bclass.push('block-red')
+              } else {
+                bclass.push('block7')
+              }
+            } else if (cat == 8) {
+              if (notif > 0 && today !== 1) {
+                bclass.push('block8-s')
+              } else if (notif > 0 && today == 1) {
+                bclass.push('block-red')
+              } else {
+                bclass.push('block8')
+              }
+            } else if (cat == 9) {
+              if (notif > 0 && today !== 1) {
+                bclass.push('block9-s')
+              } else if (notif > 0 && today == 1) {
+                bclass.push('block-red')
+              } else {
+                bclass.push('block9')
+              }
+            } else if (cat == 10) {
+              if (notif > 0 && today !== 1) {
+                bclass.push('block10-s')
+              } else if (notif > 0 && today == 1) {
+                bclass.push('block-red')
+              } else {
+                bclass.push('block10')
+              }
+            } else if (cat == 11) {
+              if (notif > 0 && today !== 1) {
+                bclass.push('block11-s')
+              } else if (notif > 0 && today == 1) {
+                bclass.push('block-red')
+              } else {
+                bclass.push('block11')
+              }
+            } else if (cat == 12) {
+              if (notif > 0 && today !== 1) {
+                bclass.push('block12-s')
+              } else if (notif > 0 && today == 1) {
+                bclass.push('block-red')
+              } else {
+                bclass.push('block12')
+              }
+            } 
+            return bclass
+           },
+           tmClass (notif) {
+            var tmclass = []
+            if (notif > 0) {
+              tmclass.push('tm-notif-w')
+            } else {
+              tmclass.push('tm-notif-r')
+            }
+            return tmclass
+          }
+         },
+         computed: {
+           sliceClinics1() {
+            return this.filtered.slice(0,this.itemsPerPage)
+           }
+         }
+      })
+    </script>
+  <ons-toolbar>
+    <div class="left">
+      <ons-back-button>ホーム</ons-back-button>
+    </div>
+    <div class="center">ターミナル</div>
+    <div class="tb-buttons">
+      <div 
+        v-for="btn in buttons"
+        :key="btn.label"
+        class="w-letter"
+        :class="{ whiten : selected_f == btn.label }" 
+        @click="filter(btn.label)">
+        {{ btn.label }}
+      </div>
+    </div>
+  </ons-toolbar>
+  <div class="homepage">
+    <div class="terminal-letters">
+     <div 
+        v-for="letter in letters"
+        :key="letter.id"
+        class="t-letter" 
+        :class="letterClass(letter.id)" 
+        @click="ltr(letter.id)">
+        {{ letter.label }}
+      </div>
+      <div class="t-letter-search"></div>
+    </div>
+    <div class="terminal-blocks x-scroll">
+     <div class="blocks" v-if="screenCount > 0" onclick="fn.load('terminal-details.html')" :class="conClass()">
+      <div 
+        v-for="clinic in sliceClinics1"
+        :key="clinic.id"
+        class="tblock"
+        v-bind:class="blockClass(clinic.category, clinic.notif_count, clinic.label, clinic.today)" 
+        @click="">
+        <div class="t-notif" v-if="clinic.notif_count > 0">
+          <span>{{ clinic.days }}</span>
+          <span class="time-notif" v-if="clinic.today == 1"><span class="time">11:40</span><span>本⽇回収有</span></span>
+          <span class="red">{{ clinic.notif_count }}</span>
+        </div>
+        {{ clinic.label }}
+        <div class="tm-notif" v-if="clinic.collection == 1" v-bind:class="tmClass(clinic.notif_count)">明⽇回収あり</div>
+      </div>
+     </div>
+     <div class="blocks" v-if="screenCount > 1" onclick="fn.load('terminal-details.html')" :class="conClass()">
+      <div 
+        v-for="clinic in sliceClinics2"
+        :key="clinic.id"
+        class="tblock"
+        v-bind:class="blockClass(clinic.category, clinic.notif_count, clinic.label, clinic.today)" 
+        @click="">
+        <div class="t-notif" v-if="clinic.notif_count > 0">
+          <span>{{ clinic.days }}</span>
+          <span class="time-notif" v-if="clinic.today == 1"><span class="time">11:40</span><span>本⽇回収有</span></span>
+          <span class="red">{{ clinic.notif_count }}</span>
+        </div>
+        {{ clinic.label }}
+        <span class="tm-notif" v-if="clinic.collection == 1" >明⽇回収あり</span>
+      </div>
+     </div>
+
+    </div>
+  </div><!-- homepage END-->
+  </ons-page>
+</template>
+<!-- 6-1.ターミナル画面 – 医院一覧 END-->
