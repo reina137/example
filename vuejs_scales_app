@@ -1,0 +1,326 @@
+<!-- AI0312 メタル預け確認 -->
+<template>
+  <v-ons-page>
+    <ClinicHeader :user-info="userInfo" :page-view="pageView" @back="back" @move-for-reset="moveForReset"/>
+	  <div class="content">
+		  <div class="page_title"><h1>メタル預け</h1></div>
+		  <div class="page-content">
+      <v-ons-row>
+       <div class="confirm-wrap">
+         {{displayDate}}<br>
+         メタル: {{appForm.evidence.metal_abbr}}<br>
+         グラム数: {{appForm.evidence.grams_fix}}g<br>
+         技工所名: {{appForm.evidence.lab_name}}
+       </div>
+      </v-ons-row>
+      <v-ons-row class="flex-between">
+          <div class="flex-50 mr-10">
+            <div><v-ons-button class="btn-confirm-choose" @click="openSignSpace">受領サイン</v-ons-button></div>
+          </div>
+          <div class="flex-50">
+            <div><v-ons-button class="btn-confirm-choose" @click="openQRCodeCamera">QRコードリーダー</v-ons-button></div>
+          </div>
+        </v-ons-row>
+        <div v-show="!isSignSpaceOpen && !isQRCodeDataOpen" class="text-hint">技工所がEvi計りを購入するとQRコードを読み込むことができます。</div>
+        <!-- 受領サイン -->
+        <div v-if="isSignSpaceOpen">
+        <v-ons-row class="mt-10">
+              <table>
+                <th class="tb-header">手書き受領サイン</th>
+                <tr><td>
+                <VueSignaturePad
+                height="200px"
+                ref="signaturePad"
+                :options="{ onBegin, backgroundColor: '#fff', throttle: 0, minWidth: 2, maxWidth: 5, dotSize: (2 + 5) / 2, penColor: '#323642'  }" />
+                </td></tr>
+              </table>
+          </v-ons-row>
+        <v-ons-row class="mt-5 mb-5">
+        <v-ons-button class="btn-grams-confirm" v-bind:class="{ inactive: notDrawing }" @click="save_sign">登録</v-ons-button>
+        </v-ons-row>
+        <v-ons-row class="mb-10">
+        <v-ons-button class="btn-grams-confirm bgr-red" v-bind:class="{ inactive: notDrawing }" @click="clear_sign">削除</v-ons-button>
+        </v-ons-row>
+        </div>
+        <!-- 受領サインEND -->
+        <!-- QRコード -->
+       <div v-if="isQRCodeDataOpen && appForm.evidence.receiver_id != ''" class="mt-10">
+          <v-ons-row>
+              <table>
+                <th class="tb-header">QRコードで読み込んだ情報</th>
+                <tr><td class="qr-td">
+                  技工所名: {{appForm.evidence.lab_name}}<br>
+                  担当者名: {{appForm.receiver_name_sei}} {{appForm.receiver_name_mei}}
+                </td></tr>
+              </table>
+          </v-ons-row>
+          <v-ons-row class="mt-10">
+            <v-ons-button class="btn-grams-confirm" :class="{gray:disableSave}" :disabled="disableSave" @click="save">登録</v-ons-button>
+          </v-ons-row>
+        </div>
+        <div v-if="errorMessage.qrcode != ''" class="text-error mt-10">
+          {{errorMessage.qrcode}}
+        </div>
+        <!-- QRコードEND -->
+        <div class="cancel_area center">
+          <v-ons-button
+            class="btn-insp btn-cancel"
+            @click="moveForReset(clinicTop)">
+            キャンセル
+          </v-ons-button>
+        </div>
+      </div>
+    </div>
+    <CompleteDepositModal :page-view="pageView" @move-for-reset="moveForReset" @move-for-repeat="moveForRepeat"/>
+    <!-- 受領サイン未記入のポップアップ -->
+    <v-ons-alert-dialog modifier="rowfooter"
+      :title="'受領サイン未記入'"
+      :footer="{閉じる: () => emptySignDialogVisible = false}"
+      :visible.sync="emptySignDialogVisible" > 担当者の名前を書いて下さい。
+    </v-ons-alert-dialog>
+    <!-- 受領サイン未記入のポップアップEND -->
+  </v-ons-page>
+</template>
+
+<script>
+import ClinicHeader from '@/views/clinic/Header.vue'
+import ClinicTop from '@/views/clinic/Top.vue'
+import ClinicDeposit from '@/views/clinic/Deposit.vue'
+import CompleteDepositModal from '@/views/clinic/modal/CompleteDeposit.vue'
+import VueSignaturePad from 'vue-signature-pad'
+
+import {Def} from '@/ConstDefinition'
+
+export default {
+
+  name: 'ClinicDepositConfirm',
+
+  components: {
+    ClinicHeader,
+    ClinicTop,
+    ClinicDeposit,
+    CompleteDepositModal,
+    VueSignaturePad
+  },
+
+  props: {
+    userInfo: Object,
+    pageView: Object,
+    appForm: Object
+  },
+
+  data() {
+    return {
+      clinicTop: ClinicTop,
+      clinicDeposit: ClinicDeposit,
+
+      displayDate: '',
+      qrdata: '',
+
+      isSignSpaceOpen: false,
+      isQRCodeDataOpen: false,
+      notDrawing: true,
+      emptySignDialogVisible: false,
+
+      errorMessage: {
+        qrcode: ''
+      }
+    }
+  },
+
+  computed: {
+    disableSave () {
+      return (this.appForm.evidence.evi_sign_blob == null && this.appForm.evidence.receiver_id == "") ||
+             this.appForm.evidence.photo == "" ||
+             this.appForm.evidence.grams_fix == "-" ||
+             this.appForm.evidence.grams_fix == "" ||
+             this.appForm.evidence.grams_fix == "0" ||
+             this.appForm.evidence.grams_fix <= 0 ||
+             this.appForm.evidence.metal_id == "" ||
+             this.appForm.evidence.lab_id == ""
+    }
+  },
+
+  watch: {
+    'appForm.checked_qr_token_correct': function (val, oldVal) {
+
+      // QRコード読み込み時トークン判定を実行したとき
+      if (oldVal == false && val == true) {
+
+        // 正常なトークンの場合
+        if (this.appForm.qr_token_correct_flg == true) {
+
+          this.appForm.evidence.receiver_id = this.qrdata.user_id
+
+        // 不正なトークンの場合
+        } else {
+
+          console.log("token uncorrect ... qrdata is empty")
+          this.qrdata = ""
+          this.errorMessage.qrcode = 'QRコードが正しく読み込みできませんでした。'
+        }
+      }
+    },
+
+    'pageView.callingAPI': function (val, oldVal) {
+      if (val === false) {
+        this.pageView.modalVisible.processing = false
+      }
+    }
+  },
+
+  created() {
+    // ヘッダーの戻るボタン表示
+    this.pageView.isBackButtonShown = true
+    this.pageView.swipeable = false
+
+    this.displayDate = this.getDisplayDate()
+  },
+
+  destroyed() {
+    this.pageView.swipeable = true
+  },
+
+  methods: {
+    move (content) {
+      this.$emit('move', content)
+    },
+
+    back () {
+      this.appForm.evidence.evi_sign_blob = null
+      this.appForm.evidence.receiver_id = ""
+      this.appForm.receiver_name_sei = ""
+      this.appForm.receiver_name_mei = ""
+      this.$emit('back')
+    },
+
+    moveForReset (content) {
+      this.$emit('move-for-reset', content)
+    },
+
+    moveForRepeat () {
+      this.$emit('repeat')
+      this.move(this.clinicDeposit)
+    },
+
+    checkQRToken (labUserId, qrToken) {
+      this.pageView.modalVisible.processing = true
+      this.$emit('check-qr-token', labUserId, qrToken)
+    },
+
+    openSignSpace () {
+      this.isSignSpaceOpen = true
+      this.isQRCodeDataOpen = false
+      this.qrdata = ""
+      this.appForm.evidence.receiver_id = ""
+      this.appForm.receiver_name_sei = ""
+      this.appForm.receiver_name_mei = ""
+      this.errorMessage.qrcode = ""
+    },
+
+    openQRCodeCamera () {
+      this.isQRCodeDataOpen = true
+      this.isSignSpaceOpen = false
+      this.notDrawing = true
+      this.appForm.evidence.evi_sign_blob = null
+      this.scanBarcode()
+    },
+
+    save () {
+      this.pageView.modalVisible.processing = true
+      this.$emit('save-deposit-evidence')
+    },
+
+    getDisplayDate () {
+      var nowDate = new Date()
+      var month = nowDate.getMonth() + 1
+      if (month < 10) { month = '0' + month }
+      var date = nowDate.getDate()
+      if (date < 10) { date = '0' + date }
+      var hours = nowDate.getHours()
+      if (hours < 10) { hours = '0' + hours }
+      var minutes = nowDate.getMinutes()
+      if (minutes < 10) { minutes = '0' + minutes }
+      var result =
+        nowDate.getFullYear() + '年' +
+        month + '月' +
+        date + '日' +
+        '（' + Def.WEEKDAY[nowDate.getDay()] + '）' +
+        hours + ':' + minutes
+      return result
+    },
+
+    save_sign () {
+      const { isEmpty, data } = this.$refs.signaturePad.saveSignature("image/jpeg", 0.7);
+      if (isEmpty === true) {
+        this.emptySignDialogVisible = true;
+      } else {
+        this.appForm.evidence.evi_sign_blob = this.make_blob(data);
+      };
+      console.log(this.appForm.evidence.evi_sign_blob);
+      this.save();
+    },
+
+    clear_sign () {
+      this.$refs.signaturePad.clearSignature();
+      this.appForm.evidence.evi_sign_blob = null;
+    },
+
+    onBegin() {
+      this.notDrawing = false;
+    },
+
+    make_blob: function(dataURI) {
+      var byteString = atob(dataURI.split(',')[1]);
+      var ab = new ArrayBuffer(byteString.length);
+      var ia = new Uint8Array(ab);
+      for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      return new Blob([ab], { type: 'image/jpeg' });
+    },
+
+    scanBarcode() {
+      this.appForm.checked_qr_token_correct = false
+      this.qrdata = ""
+      this.appForm.evidence.receiver_id = ""
+      this.appForm.receiver_name_sei = ""
+      this.appForm.receiver_name_mei = ""
+      this.errorMessage.qrcode = ""
+      cordova.plugins.barcodeScanner.scan(result => {
+        try {
+          if (result && result.text != '') {
+            this.qrdata = JSON.parse(result.text)
+            if (this.qrdata.user_id && this.qrdata.lab_id && this.qrdata.qr_token) {
+              if (this.qrdata.lab_id === this.appForm.evidence.lab_id) {
+                this.checkQRToken(this.qrdata.user_id, this.qrdata.qr_token)
+              } else {
+                this.errorMessage.qrcode = '選択した技工所と一致しませんでした。'
+              }
+            } else {
+              this.errorMessage.qrcode = 'QRコードが正しく読み込みできませんでした。'
+            }
+          } else {
+            this.errorMessage.qrcode = 'QRコードが正しく読み込みできませんでした。'
+          }
+        } catch (error) {
+          this.errorMessage.qrcode = 'QRコードが正しく読み込みできませんでした。'
+        }
+      }, error => { console.log("Scanning failed: " + error) },
+      {
+        preferFrontCamera : false, // iOS and Android
+        showFlipCameraButton : true, // iOS and Android
+        showTorchButton : true, // iOS and Android
+        torchOn: true, // Android, launch with the torch switched on (if available)
+        saveHistory: false, // Android, save scan history (default false)
+        prompt : "", // Android
+        resultDisplayDuration: 0, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+        formats : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+        //orientation : "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
+        disableAnimations : true, // iOS
+        disableSuccessBeep: false // iOS and Android
+      })
+    }
+  }
+}
+</script>
