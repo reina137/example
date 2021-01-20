@@ -1,0 +1,98 @@
+#Supersaas export
+api_key = '######' 
+schedule_id = '######'
+today = (date.today()).strftime("%Y-%b-%d") 
+get_lessons_from = today
+get_lessons_to = today
+get_limit = '5'
+post_url = 'https://www.supersaas.com/api/bookings.json?schedule_id=' + schedule_id + '&api_key=' + api_key
+get_url = 'https://www.supersaas.com/api/range/' + schedule_id + '.json?api_key=' + api_key + '&from=' + get_lessons_from + '&to=' + get_lessons_to + '&limit=' + get_limit
+#URL POST example:
+#new_url = 'https://www.supersaas.com/api/bookings.json?schedule_id=519048&api_key=Jhl72KGFO1KfeDauaFKdsQ&booking[start]=2020-09-08%2013:00:00&booking[finish]=2020-09-08%2013:30:00&booking[full_name]=Test'
+#json POST:
+data = {'start': '2020-09-08 14:30:00', 'finish': '2020-09-08 15:00:00', 'full_name': 'Lesson_3', 'address': 'test@test.com', 'mobile': '12345678'}
+
+def create_lesson():
+    r = requests.post(post_url, data=json.dumps(data))
+    if r.status_code != 201:
+        print ('エラー', r.status_code)
+    else:
+        print ('予約を追加しました。')
+
+#List all lessons to obtain lesson ID
+def list_lessons():
+    r = requests.get(get_url)
+    if r.status_code != 200:
+        print ('エラー', r.status_code)
+    else:
+        lessons = r.json()
+        return lessons
+    
+#delete lesson by ID
+def delete_lesson():
+    lesson_id = input('予約IDを入力して下さい：')
+    delete_url = 'https://www.supersaas.com/api/bookings/' + lesson_id + '.json?schedule_id=' + schedule_id + '&api_key=' + api_key
+    r = requests.delete(delete_url)
+    if r.status_code != 200:
+        print ('エラー', r.status_code)
+    else:
+        print ('予約を削除しました。')
+        
+        
+ # Line Create Audience
+import requests
+def create_line_audience():
+    url = 'https://api.line.me/v2/bot/audienceGroup/upload'
+    token = '#######'
+    headers = {'Authorization': f'Bearer {token}', 'content-type':'application/json'}
+    data = {"description": "paidUsers","audiences":[{"id":"#####"},{"id":"######"}]}
+    r = requests.post(url, headers=headers, json=data)
+    print(r.text)
+    
+  
+ #Gmail download mail
+import imaplib
+import base64
+import email
+from datetime import date
+
+user = '#######'
+pw = 'APP_PASSWORD'
+host = 'imap.gmail.com'
+
+def get_mail():
+    #add search criteria
+    today = (date.today()).strftime("%d-%b-%Y")
+    title1 = 'トライアル'
+    title2 = 'プラン変更'
+    #all search criteria:
+    #http://www.example-code.com/csharp/imap-search-critera.asp
+    search_criteria = '(SENTON '+today+' OR SUBJECT "'+title1+'" SUBJECT "'+title2+'")'
+    #connect to gmail
+    m = imaplib.IMAP4_SSL(host, 993)
+    m.login(user, pw)
+    m.select('Inbox')
+    #apply the search criteria
+    #None: charset not specified
+    #response can be ok/not ok; data: returns all mail IDs
+    response, mails = m.search(None, search_criteria)
+    #save mail IDs
+    items = mails[0].split()
+    for emailid in items:
+        #RFC822: fetching both headers and body
+        resp, data = m.fetch(emailid, "(RFC822)") 
+        #save mail content
+        raw_email = data[0][1] 
+        #parsing the mail content to get a mail object
+        raw_email_string = raw_email.decode('utf-8')
+        mtemp = email.message_from_string(raw_email_string)
+        for part in mtemp.walk():
+            if part.get_content_type() == "text/plain":
+                body = part.get_payload(decode=True)
+                mail_body = body.decode('iso-2022-jp')
+            else:
+                continue
+        #new dict to keep only required values
+        mlist = {}
+        (mlist["Date"],mlist["From"],mlist["Subject"],mlist["Body"]) = (mtemp["Date"],mtemp["From"],mtemp["Subject"],mail_body)
+        print(mlist)
