@@ -1,0 +1,98 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+
+{% set Categories = repository('Eccube\\Entity\\Category').getList_Have_Product() %}
+
+{% dump(Categories) %}
+
+<div class="ec-categorySideRole">
+    <div class="ec-headerCategoryArea__heading">
+        <p>{{ 'カテゴリー一覧'|trans }}</p>
+    </div>
+    <nav class="ec-sideCate">
+      <ul class="ec-sideCate__nav">
+          {% if Categories %}
+            {% for key, category in Categories %}
+            <li class="menu" name="c{{ category.id }}">
+              <a href="{{ url('product_list') }}?category_id={{ category.id }}">
+              {% if category.plg_file_name %}
+                 <img src="{{ asset('rich_category/'~category.plg_file_name, 'save_image') }}" />
+              {% endif %}
+              {{ category.category_name }}
+              </a>
+              {% if category.child|length > 0 %}
+                {% for key, child in category.child %}
+                  <ul class="sub-menu-nav"><!-- 中分類出力 -->
+                    <li name="c{{ child.id }}"><a href="{{ url('product_list') }}?category_id={{ child.id }}">{{ child.category_name }}</a>
+
+                    {% if child.maker|length > 0 %}
+                      {% for key, maker in child.maker %}
+                        <ul class="sub-sub-menu-nav"><!-- メーカー出力 -->
+                          <li name="m{{ maker.maker_code }}" ><a href="{{ url('product_list') }}?category_id={{ child.id }}&maker_code={{ maker.maker_code }}">{{ maker.name }}</a></li>
+                        </ul>
+                      {% endfor %}
+                    {% endif %}
+                    </li>
+                  </ul>
+                {% endfor %}
+              {% endif %}
+              </li>
+            {% endfor %}
+          {% endif %}
+      </ul>
+    </nav>
+</div>
+
+{% block javascript %}
+    <script>
+        $(function() {
+            //クリックしたカテゴリーの商品一覧を表示
+            $('.parentMenu').on('click', function(event,param) {
+                if (param != '1') {
+                  var getId = $(this).prop('id');
+                  var ID = getId.substr(10);
+                  location.href =  '{{ url('product_list') }}?category_id=' + ID;
+                }
+            });
+
+            //リダイレクト後もツリーの表示状態を保つ
+            $(".menu:has(.current)").addClass("current");
+
+            //class="current" を付与するためのコード
+            $(window).on('load', function(){
+                //パラメーター取得
+                var Param = location.search;
+
+                if (Param != '') {
+                  var arg  = new Object;
+                   url = Param.substring(1).split('&');
+
+                  for(i=0; url[i]; i++) {
+                      var k = url[i].split('=');
+                      arg[k[0]] = k[1];
+                  }
+
+                  //値を取得
+                  if (arg.category_id !='') {
+                    var category_id = arg.category_id;
+                  }
+
+                  //値の name のaタグに id を付与
+                  if (category_id != "") {
+                    $('[name="c' + category_id + '"]').attr('class','current');
+                    $('[name="c' + category_id + '"]').parents("li").attr('class','current');
+                  }
+                }
+            });
+        });
+    </script>
+
+{% endblock %}
